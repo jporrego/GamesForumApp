@@ -1,11 +1,13 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css2?family=Varta:wght@300;400;500;600;700&display=swap');
 /* Global Styles */
 
 :root {
-  --primary-color: #dc3545;
+  --primary-color: #414af2;
   --bg-color: #202225;
+  --bg-color-light: #27292c;
   --dark-color: #121213;
   --light-color: #f4f4f4;
+  --red-color: #D9415D;
   --font-color-black: rgb(20, 20, 20);
   --font-color-white: rgb(248, 248, 248);
   --font-color-grey: rgb(156, 156, 156);
@@ -22,7 +24,7 @@ html {
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Varta', sans-serif;
   line-height: 1.6;
   background-color: var(--bg-color);
   color: #333;

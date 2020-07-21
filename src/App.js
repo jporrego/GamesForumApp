@@ -1,6 +1,9 @@
 import React, { Component } from "react";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
+import Home from "./components/pages/Home";
 import Games from "./components/games/Games";
+import Game from "./components/games/Game";
 import GamesFilter from "./components/games/GamesFilter";
 import axios from "axios";
 import "./App.css";
@@ -8,6 +11,7 @@ import "./App.css";
 class App extends Component {
   state = {
     games: [],
+    game: [],
   };
 
   async componentDidMount() {
@@ -19,13 +23,21 @@ class App extends Component {
     const games = this.state.games;
 
     return (
-      <div className="App">
-        <Navbar />
-        <div className="container">
-          <GamesFilter></GamesFilter>
-          <Games games={games} />
+      <Router>
+        <div className="App">
+          <Navbar />
+          <div className="container">
+            <Switch>
+              <Route exact path="/">
+                <Home games={games} />
+              </Route>
+              <Route exact path="/:title">
+                <Game game={this.state.game}></Game>
+              </Route>
+            </Switch>
+          </div>
         </div>
-      </div>
+      </Router>
     );
   }
 }

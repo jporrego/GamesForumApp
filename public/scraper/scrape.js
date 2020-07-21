@@ -72,9 +72,17 @@ request(
           gameObject.date = date;
         }
         if (Object.entries(gameObject).length != 0) {
-          gameObject.key = key;
-          key++;
-          games.push(gameObject);
+          let gameExists;
+          for (const game of games) {
+            if (game.title === gameObject.title) {
+              gameExists = true;
+            }
+          }
+          if (!gameExists) {
+            gameObject.key = key;
+            key++;
+            games.push(gameObject);
+          }
         }
       });
       let gamesJSON = JSON.stringify(games);
