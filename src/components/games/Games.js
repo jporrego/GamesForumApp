@@ -1,20 +1,21 @@
 import React from "react";
-import Game from "./Game";
+import GameItem from "./GameItem";
 
-function Games() {
+function Games({ games }) {
   return (
     <div style={gamesStyle}>
-      <Game />
-      <Game />
-      <Game />
+      {games.map((game) => (
+        <GameItem key={game.key} game={game} />
+      ))}
     </div>
   );
 }
 
 const gamesStyle = {
   display: "grid",
-  gridTemplateColumns: "repeat(3, 1fr)",
-  gridGap: "1rem",
+  gridTemplateColumns: "1fr",
+  gridAutoRows: "6rem",
+  gridGap: "1.5rem",
 };
 
 export default Games;

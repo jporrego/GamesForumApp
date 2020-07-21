@@ -9,6 +9,7 @@ request(
 
       // ------ Games
       const games = [];
+      let key = 0;
 
       $("h3").each((i, game) => {
         const gameObject = {};
@@ -70,11 +71,18 @@ request(
 
           gameObject.date = date;
         }
-        games.push(gameObject);
+        if (Object.entries(gameObject).length != 0) {
+          gameObject.key = key;
+          key++;
+          games.push(gameObject);
+        }
       });
-
       let gamesJSON = JSON.stringify(games);
-      console.log(gamesJSON);
+      let fs = require("fs");
+      fs.writeFile("games.json", gamesJSON, function (err) {
+        if (err) throw err;
+        console.log("Complete");
+      });
     }
   }
 );
