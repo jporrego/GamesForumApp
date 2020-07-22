@@ -11,7 +11,7 @@ import "./App.css";
 class App extends Component {
   state = {
     games: [],
-    game: [],
+    game: {},
   };
 
   async componentDidMount() {
@@ -31,8 +31,8 @@ class App extends Component {
               <Route exact path="/">
                 <Home games={games} />
               </Route>
-              <Route exact path="/:title">
-                <Game game={this.state.game}></Game>
+              <Route exact path="/game/:title">
+                <Game games={this.state.games}></Game>
               </Route>
             </Switch>
           </div>
