@@ -42,23 +42,28 @@ request(
         if ($(game).parent().hasClass("flow-spacing")) {
           const img = $(game).prev().find("img").attr("data-src");
 
-          console.log(img);
           gameObject.img = img;
         }
-        /*
-        // --- Get Platform ---
-        if ($(game).parent().hasClass("title")) {
-          const platform = $(game)
-            .parent()
-            .parent()
-            .children(".clamp-details")
-            .children(".platform")
-            .children(".data")
-            .text()
-            .replace(/\s\s+/g, "");
 
+        // --- Get Platform ---
+        if ($(game).parent().hasClass("flow-spacing")) {
+          let platform = $(game).next().text();
+          if (platform === "") {
+            platform = $(game)
+              .parent()
+              .parent()
+              .next()
+              .find(".flow-spacing")
+              .text();
+          }
+          platform = platform.trim().split("|")[2];
+          if (platform === undefined) {
+            platform = "-";
+          } else {
+            platform = platform.trim();
+          }
           gameObject.platform = platform;
-        }
+        } /*
 
         // --- Get Date ---
         if ($(game).parent().hasClass("title")) {
