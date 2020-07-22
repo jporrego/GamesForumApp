@@ -63,46 +63,44 @@ request(
             platform = platform.trim();
           }
           gameObject.platform = platform;
-        } /*
+        }
 
         // --- Get Date ---
-        if ($(game).parent().hasClass("title")) {
-          const date = $(game)
-            .parent()
-            .parent()
-            .children(".clamp-details")
-            .children("span")
-            .text()
-            .replace(/(,)+/g, "");
+        if ($(game).parent().hasClass("flow-spacing")) {
+          let date = $(game).next().text();
+          if (date === "") {
+            date = $(game)
+              .parent()
+              .parent()
+              .next()
+              .find(".flow-spacing")
+              .text();
+          }
+
+          date = date.trim().split("|")[0];
+
+          if (date === undefined) {
+            date = "-";
+          } else {
+            date = date.trim();
+          }
 
           gameObject.date = date;
         }
-        if (Object.entries(gameObject).length != 0) {
-          let gameExists;
-          for (const game of games) {
-            if (game.title === gameObject.title) {
-              gameExists = true;
-            }
-          }
-          if (!gameExists) {
-            gameObject.key = key;
-            key++;
-            games.push(gameObject);
-          }
-        }*/
-        gameObject.key = key;
-        key++;
-        games.push(gameObject);
+
+        if (gameObject.title != undefined) {
+          gameObject.key = key;
+          key++;
+          games.push(gameObject);
+        }
       });
-      console.log(
-        games
-      ); /*
+
       let gamesJSON = JSON.stringify(games);
       let fs = require("fs");
       fs.writeFile("games_v2.json", gamesJSON, function (err) {
         if (err) throw err;
         console.log("Complete");
-      });*/
+      });
     }
   }
 );

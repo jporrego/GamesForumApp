@@ -47,7 +47,7 @@ const GameTitle = styled.div`
 
 const GameItemStyle = styled.div`
   display: grid;
-  grid-template-columns: 10% 20% repeat(5, 1fr);
+  grid-template-columns: 10% 20% 20% repeat(4, 1fr);
   grid-template-rows: 1fr;
   background-color: var(--bg-color-light);
   color: var(--font-color-white);
@@ -96,6 +96,8 @@ const GamePlatform = styled.div`
   font-weight: 500;
   align-self: center;
   justify-self: center;
+  text-align: center;
+  padding: 0.5rem;
 `;
 
 const GameDate = styled.div`

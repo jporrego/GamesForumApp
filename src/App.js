@@ -15,7 +15,7 @@ class App extends Component {
   };
 
   async componentDidMount() {
-    const res = await axios.get("./scraper/games.json");
+    const res = await axios.get("./scraper/games_v2.json");
     this.setState({ games: res.data });
   }
 
