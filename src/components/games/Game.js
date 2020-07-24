@@ -5,35 +5,46 @@ import { useLocation } from "react-router-dom";
 function Game({ games }) {
   const location = useLocation();
 
-  useEffect(() => {
-    getGame();
-  }, []);
-
   const [game, setGame] = useState({});
 
+  useEffect(() => {
+    getGame();
+    scrollToTop();
+  }, []);
+
   const getGame = async () => {
+    console.log(location.state.gameTitle);
     let gamesArray = { games };
     gamesArray = gamesArray.games;
-    let game = gamesArray.filter(
+    let game = await gamesArray.filter(
       (game) => game.title === location.state.gameTitle
     );
     game = game[0];
     setGame(game);
   };
 
-  return (
-    <GameBackground image={game.img}>
-      <GameStyle>
-        <GameImg src={game.img} alt="" />
-        <GameTitle>{game.title}</GameTitle>
-        <GameSummary>{game.summary}</GameSummary>
-        <GamePlatform>{game.platform}</GamePlatform>
-        <GameDate>{game.date}</GameDate>
-        <Followers>Followers</Followers>
-        <Comments>Comments</Comments>
-      </GameStyle>
-    </GameBackground>
-  );
+  const scrollToTop = () => {
+    window.scrollTo(0, 0);
+  };
+
+  if (game != undefined) {
+    return (
+      <GameBackground image={game.img}>
+        <GameStyle>
+          <GameImg src={game.img} alt="" />
+          <GameTitle>{game.title}</GameTitle>
+          <GameSummary>{game.summary}</GameSummary>
+          <GamePlatform>{game.platform}</GamePlatform>
+          <GameDate>{game.date}</GameDate>
+          <Followers>Followers</Followers>
+          <Comments>Comments</Comments>
+        </GameStyle>
+      </GameBackground>
+    );
+  } else {
+    getGame();
+    return <div>12</div>;
+  }
 }
 
 const GameBackground = styled.div`

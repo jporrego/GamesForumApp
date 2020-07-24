@@ -16,7 +16,7 @@ function GameItem({ game, game: { title, summary, img, platform, date } }) {
   function goToGamePage(e) {
     e.preventDefault();
     history.push({
-      pathname: "/game/" + title,
+      pathname: "/" + title,
       state: { gameTitle: title },
     });
   }

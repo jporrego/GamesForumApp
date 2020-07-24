@@ -31,7 +31,7 @@ class App extends Component {
               <Route exact path="/">
                 <Home games={games} />
               </Route>
-              <Route exact path="/game/:title">
+              <Route exact path="/:title">
                 <Game games={this.state.games}></Game>
               </Route>
             </Switch>
