@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import GameItem from "./GameItem";
+import GameContext from "../../context/game/gameContext";
 
-function Games({ games }) {
+const Games = () => {
+  const gameContext = useContext(GameContext);
+  const games = gameContext.games;
+
   return (
     <div style={gamesStyle}>
       {games.map((game) => (
-        <GameItem key={game.key} game={game} />
+        <GameItem game={game}></GameItem>
       ))}
     </div>
   );
-}
+};
 
 const gamesStyle = {
   display: "grid",

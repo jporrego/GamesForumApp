@@ -7,4 +7,6 @@ CREATE TABLE game
     img VARCHAR(500) NOT NULL,
     platform VARCHAR(50),
     summary VARCHAR(500) NOT NULL,
+    date INTEGER NOT NULL
 );
+
