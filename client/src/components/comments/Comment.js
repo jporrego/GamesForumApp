@@ -7,7 +7,7 @@ const Comment = ({ comment }) => {
     <CommentStyle>
       <CommentText>{comment.comment_text}</CommentText>
       <CommentDate>{comment.comment_date}</CommentDate>
-      <CommentUser></CommentUser>
+      <CommentUser>{comment.user.name}</CommentUser>
     </CommentStyle>
   );
 };
@@ -15,21 +15,35 @@ const Comment = ({ comment }) => {
 const CommentStyle = styled.div`
   display: grid;
   grid-template-rows: 1fr max-content;
+  grid-template-columns: 80% 1fr;
+  align-items: center;
   color: var(--font-color-white);
   background-color: var(--dark-color);
   font-size: 1.6rem;
   font-weight: 400;
-  padding: 2rem 1rem;
+  padding: 0.8rem 0px;
 `;
 
 const CommentText = styled.div`
-  margin-left: 2.5rem;
+  grid-row: 1/2;
+  grid-column: 1/2;
+  margin-left: 4rem;
 `;
 
 const CommentDate = styled.div`
-  margin-left: 2.5rem;
+  grid-row: 2/3;
+  grid-column: 1/2;
+  margin-left: 4rem;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--font-color-grey);
 `;
 
-const CommentUser = styled.div``;
+const CommentUser = styled.div`
+  grid-row: 1/3;
+  grid-column: 2/3;
+  margin-right: 2.5rem;
+  justify-self: end;
+`;
 
 export default Comment;
