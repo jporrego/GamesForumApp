@@ -1,4 +1,4 @@
-import { GET_GAMES } from "../types";
+import { GET_GAMES, SET_SELECTED_GAME } from "../types";
 
 export default (state, action) => {
   switch (action.type) {
@@ -6,6 +6,11 @@ export default (state, action) => {
       return {
         ...state,
         games: action.payload,
+      };
+    case SET_SELECTED_GAME:
+      return {
+        ...state,
+        selectedGame: action.payload,
       };
     default:
       return state;

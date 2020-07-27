@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import styled, { css } from "styled-components";
 import { useLocation } from "react-router-dom";
+import Comments from "../comments/Comments";
 import GameContext from "../../context/game/gameContext";
 
 function Game() {
@@ -11,12 +12,13 @@ function Game() {
   const [game, setGame] = useState({});
 
   useEffect(() => {
+    gameContext.getGames();
     getGame();
     scrollToTop();
   }, []);
 
   const getGame = async () => {
-    console.log(location.state.gameTitle);
+    //console.log(location.state.gameTitle);
     let gamesArray = { games };
     gamesArray = gamesArray.games;
     let game = await gamesArray.filter(
@@ -24,6 +26,7 @@ function Game() {
     );
     game = game[0];
     setGame(game);
+    gameContext.setSelectedGame(game);
   };
 
   const scrollToTop = () => {
@@ -32,50 +35,45 @@ function Game() {
 
   if (game != undefined) {
     return (
-      <GameBackground image={game.img}>
-        <GameStyle>
+      <GameStyle>
+        <GameBackground image={game.img}>123</GameBackground>
+        <GameInfo>
           <GameImg src={game.img} alt="" />
           <GameTitle>{game.title}</GameTitle>
           <GameSummary>{game.summary}</GameSummary>
           <GamePlatform>{game.platform}</GamePlatform>
           <GameDate>{game.date}</GameDate>
           <Followers>Followers</Followers>
-          <Comments>Comments</Comments>
-        </GameStyle>
-      </GameBackground>
+          <CommentCount>Comments</CommentCount>
+        </GameInfo>
+        <Comments gameId={game.game_id}></Comments>
+      </GameStyle>
     );
   } else {
     getGame();
     return <div>12</div>;
   }
 }
-
-const GameBackground = styled.div`
-  position: absolute;
-  left: 0;
-  top: 5rem;
-  width: 100vw;
-  height: 100vh;
-  z-index: 1;
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -6;
-    background-image: url(${(props) => props.image});
-    background-repeat: repeat;
-    background-size: cover;
-    filter: blur(50px);
-  }
-`;
-
 const GameStyle = styled.div`
   max-width: 1200px;
   margin: 10rem auto;
   min-height: 26rem;
+`;
+
+const GameBackground = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -5;
+  background-image: url(${(props) => props.image});
+  background-repeat: repeat;
+  background-size: cover;
+  filter: blur(50px);
+`;
+
+const GameInfo = styled.div`
   display: grid;
   grid-template-columns: 30% 40% repeat(2, 1fr);
   grid-template-rows: max-content 1fr;
@@ -141,7 +139,7 @@ const Followers = styled.div`
   font-weight: 600;
   margin-top: 3rem;
 `;
-const Comments = styled.div`
+const CommentCount = styled.div`
   grid-row: 2/3;
   grid-column: 4/5;
   justify-self: center;

@@ -9,7 +9,7 @@ const Games = () => {
   return (
     <div style={gamesStyle}>
       {games.map((game) => (
-        <GameItem game={game}></GameItem>
+        <GameItem key={game.game_id} game={game}></GameItem>
       ))}
     </div>
   );
