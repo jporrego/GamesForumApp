@@ -22,6 +22,16 @@ const CommentStyle = styled.div`
   font-size: 1.6rem;
   font-weight: 400;
   padding: 0.8rem 0px;
+  border-radius: 0.6rem;
+  border-bottom: 0px solid var(--primary-color);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: all 0.15s ease-out;
+
+  &:hover {
+    border-bottom: 3px solid var(--primary-color);
+    transform: translateY(-3px);
+  }
 `;
 
 const CommentText = styled.div`

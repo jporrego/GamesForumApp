@@ -3,13 +3,13 @@
 
 :root {
   --primary-color: #414af2;
-  --bg-color: #202225;
+  --bg-color: #25272b;
   --bg-color-light: #27292c;
   --dark-color: #121213;
   --light-color: #f4f4f4;
   --red-color: #D9415D;
   --font-color-black: rgb(20, 20, 20);
-  --font-color-white: rgb(248, 248, 248);
+  --font-color-white: rgb(235, 235, 235);
   --font-color-grey: rgb(156, 156, 156);
 }
 

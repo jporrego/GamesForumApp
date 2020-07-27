@@ -1,12 +1,21 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { NavLink, Link } from "react-router-dom";
 
 const Navbar = ({ icon, title }) => {
   return (
     <nav className="navbar bg-primary">
       <h1>
-        <i className={icon}></i> {title}
+        <i className={icon}></i> <Link to="/">{title}</Link>
       </h1>
+      <ul>
+        <li>
+          <Link to="login">Login</Link>
+        </li>
+        <li>
+          <Link to="register">Register</Link>
+        </li>
+      </ul>
     </nav>
   );
 };

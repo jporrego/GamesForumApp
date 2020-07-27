@@ -2,6 +2,8 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
 import Home from "./components/pages/Home";
+import Register from "./components/pages/Register";
+import Login from "./components/pages/Login";
 import Game from "./components/games/Game";
 import axios from "axios";
 import "./App.css";
@@ -18,6 +20,12 @@ const App = () => {
             <Switch>
               <Route exact path="/">
                 <Home />
+              </Route>
+              <Route exact path="/login">
+                <Login></Login>
+              </Route>
+              <Route exact path="/register">
+                <Register></Register>
               </Route>
               <Route exact path="/:title">
                 <Game></Game>
