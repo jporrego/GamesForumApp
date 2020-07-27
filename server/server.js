@@ -9,11 +9,14 @@ app.use(cors());
 app.use(express.json({ extended: false }));
 
 // --- ROUTES ---
-// create a game
+// Create a game and get all games
 app.use("/api/games", require("./routes/games"));
-// get all games
-app.use("/api/games", require("./routes/games"));
-// get a game
+// Register users
+app.use("/api/users", require("./routes/users"));
+// Login
+app.use("/api/auth", require("./routes/auth"));
+// Make and get Comments
+app.use("/api/comments", require("./routes/comments"));
 
 app.listen(5000, (req, res) => {
   console.log("Server started.");

@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styled, { css } from "styled-components";
 import { useLocation } from "react-router-dom";
+import GameContext from "../../context/game/gameContext";
 
-function Game({ games }) {
+function Game() {
   const location = useLocation();
+  const gameContext = useContext(GameContext);
+  const games = gameContext.games;
 
   const [game, setGame] = useState({});
 

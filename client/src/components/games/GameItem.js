@@ -30,8 +30,14 @@ function GameItem({ game, game: { title, summary, img, platform, date } }) {
       <GameSummary>{summary.substring(0, 80).trim() + "..."}</GameSummary>
       <GamePlatform>{platform}</GamePlatform>
       <GameDate>{date}</GameDate>
-      <div>5</div>
-      <div>5</div>
+      <GameFollowers>
+        <div>Followers</div>
+        <div>5</div>
+      </GameFollowers>
+      <GameComments>
+        <div>Comments</div>
+        <div>5</div>
+      </GameComments>
     </GameItemStyle>
   );
 }
@@ -106,6 +112,24 @@ const GameDate = styled.div`
   font-weight: 500;
   align-self: center;
   justify-self: center;
+`;
+
+const GameFollowers = styled.div`
+  grid-column: 6/7;
+  font-size: 1.3rem;
+  font-weight: 500;
+  align-self: center;
+  justify-self: center;
+  text-align: center;
+`;
+
+const GameComments = styled.div`
+  grid-column: 7/8;
+  font-size: 1.3rem;
+  font-weight: 500;
+  align-self: center;
+  justify-self: center;
+  text-align: center;
 `;
 
 export default GameItem;
