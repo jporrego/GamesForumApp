@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled, { css } from "styled-components";
 import { NavLink, Link, useHistory } from "react-router-dom";
+import GameContext from "../../context/game/gameContext";
 
 function GameItem({ game, game: { title, summary, img, platform, date } }) {
+  const gameContext = useContext(GameContext);
+
   const gameTitleLength = 25;
   let gameTitleText;
   if (title.length <= gameTitleLength) {
@@ -15,9 +18,9 @@ function GameItem({ game, game: { title, summary, img, platform, date } }) {
 
   function goToGamePage(e) {
     e.preventDefault();
+    gameContext.setSelectedGame(game);
     history.push({
       pathname: "/" + title,
-      state: { gameTitle: title },
     });
   }
 

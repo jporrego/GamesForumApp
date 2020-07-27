@@ -21,4 +21,26 @@ router.post("/", async (req, res) => {
   }
 });
 
+// @route GET api/comments
+// @desc Get comments of a game
+// @access Public
+router.get("/", async (req, res) => {
+  try {
+    //const { game_id } = req.body;
+    const comments = await pool.query(
+      "SELECT * FROM comment WHERE game_id = $1;",
+      [req.query.game_id]
+    );
+    /*
+    if (!comments.rows) {
+      return res.status(400).json({ msg: "No comments for that game_id" });
+    }*/
+    console.log(req.query);
+    res.json(comments.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
 module.exports = router;

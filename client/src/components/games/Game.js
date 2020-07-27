@@ -7,27 +7,14 @@ import GameContext from "../../context/game/gameContext";
 function Game() {
   const location = useLocation();
   const gameContext = useContext(GameContext);
-  const games = gameContext.games;
-
-  const [game, setGame] = useState({});
+  const game = gameContext.selectedGame;
+  //const [game, setGame] = useState({});
 
   useEffect(() => {
-    gameContext.getGames();
-    getGame();
+    //gameContext.getGames();
+    //getGame();
     scrollToTop();
   }, []);
-
-  const getGame = async () => {
-    //console.log(location.state.gameTitle);
-    let gamesArray = { games };
-    gamesArray = gamesArray.games;
-    let game = await gamesArray.filter(
-      (game) => game.title === location.state.gameTitle
-    );
-    game = game[0];
-    setGame(game);
-    gameContext.setSelectedGame(game);
-  };
 
   const scrollToTop = () => {
     window.scrollTo(0, 0);
@@ -38,7 +25,7 @@ function Game() {
       <GameStyle>
         <GameBackground image={game.img}>123</GameBackground>
         <GameInfo>
-          <GameImg src={game.img} alt="" />
+          <GameImg src={gameContext.selectedGame.img} alt="" />
           <GameTitle>{game.title}</GameTitle>
           <GameSummary>{game.summary}</GameSummary>
           <GamePlatform>{game.platform}</GamePlatform>
@@ -46,11 +33,10 @@ function Game() {
           <Followers>Followers</Followers>
           <CommentCount>Comments</CommentCount>
         </GameInfo>
-        <Comments gameId={game.game_id}></Comments>
+        <Comments></Comments>
       </GameStyle>
     );
   } else {
-    getGame();
     return <div>12</div>;
   }
 }

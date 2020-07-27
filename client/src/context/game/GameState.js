@@ -19,8 +19,8 @@ const GameState = (props) => {
   };
 
   // SET_SELECTED_GAME
-  const setSelectedGame = (game) => {
-    dispatch({ type: SET_SELECTED_GAME, payload: game });
+  const setSelectedGame = (game_id) => {
+    dispatch({ type: SET_SELECTED_GAME, payload: game_id });
   };
 
   return (
