@@ -5,7 +5,9 @@ const Comment = ({ comment }) => {
   console.log({ comment });
   return (
     <CommentStyle>
-      <div>{comment.comment_text}</div>
+      <CommentText>{comment.comment_text}</CommentText>
+      <CommentDate>{comment.comment_date}</CommentDate>
+      <CommentUser></CommentUser>
     </CommentStyle>
   );
 };
@@ -19,5 +21,15 @@ const CommentStyle = styled.div`
   font-weight: 400;
   padding: 2rem 1rem;
 `;
+
+const CommentText = styled.div`
+  margin-left: 2.5rem;
+`;
+
+const CommentDate = styled.div`
+  margin-left: 2.5rem;
+`;
+
+const CommentUser = styled.div``;
 
 export default Comment;

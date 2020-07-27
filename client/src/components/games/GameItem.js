@@ -17,7 +17,6 @@ function GameItem({ game, game: { title, summary, img, platform, date } }) {
   const history = useHistory();
 
   function goToGamePage(e) {
-    e.preventDefault();
     gameContext.setSelectedGame(game);
     history.push({
       pathname: "/" + title,

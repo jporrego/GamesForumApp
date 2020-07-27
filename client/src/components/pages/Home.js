@@ -9,6 +9,7 @@ function Home({ games }) {
 
   useEffect(() => {
     gameContext.getGames();
+    //gameContext.clearSelectedGame();
   }, []);
 
   return (

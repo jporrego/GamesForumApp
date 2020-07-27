@@ -5,14 +5,10 @@ import Comments from "../comments/Comments";
 import GameContext from "../../context/game/gameContext";
 
 function Game() {
-  const location = useLocation();
   const gameContext = useContext(GameContext);
   const game = gameContext.selectedGame;
-  //const [game, setGame] = useState({});
 
   useEffect(() => {
-    //gameContext.getGames();
-    //getGame();
     scrollToTop();
   }, []);
 

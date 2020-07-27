@@ -31,11 +31,21 @@ router.get("/", async (req, res) => {
       "SELECT * FROM comment WHERE game_id = $1;",
       [req.query.game_id]
     );
+
+    const date = await pool.query(
+      "SELECT comment_date, TO_CHAR(comment_date, 'DD Mon YYYY') FROM comment WHERE game_id = $1;",
+      [req.query.game_id]
+    );
+    let i = 0;
+    for (const comment of comments.rows) {
+      comment.comment_date = date.rows[i].to_char;
+      i++;
+    }
     /*
     if (!comments.rows) {
       return res.status(400).json({ msg: "No comments for that game_id" });
     }*/
-    console.log(req.query);
+    console.log(comments.rows);
     res.json(comments.rows);
   } catch (err) {
     console.error(err.message);

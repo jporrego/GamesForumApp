@@ -24,21 +24,7 @@ const Comments = () => {
   };
 
   if (!comments) {
-    return (
-      <CommentsStyle>
-        <CommentsFilter>
-          <CommentsFilterTitle>Latest</CommentsFilterTitle>
-          <CommentsFilterSelector>
-            <form id="comments_form">
-              <select name="comments-filter">
-                <option value="latest">Latest</option>
-                <option value="best">Best</option>
-              </select>
-            </form>
-          </CommentsFilterSelector>
-        </CommentsFilter>
-      </CommentsStyle>
-    );
+    return <div>Spinner</div>;
   }
   return (
     <CommentsStyle>
