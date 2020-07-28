@@ -1,15 +1,59 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import styled, { css } from "styled-components";
+import axios from "axios";
+import GameContext from "../../context/game/gameContext";
 
 const CommentBox = () => {
+  const gameContext = useContext(GameContext);
+
+  const [comment, setComment] = useState({
+    commentText: "",
+  });
+
+  const { commentText } = comment;
+
+  const onChange = (e) =>
+    setComment({ ...comment, [e.target.name]: e.target.value });
+
+  const onSubmit = async (e) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    if (commentText === "") {
+      e.preventDefault();
+      return;
+    }
+
+    const payload = {
+      user_account_id: 18,
+      game_id: gameContext.selectedGame.game_id,
+      comment_text: commentText,
+    };
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/comments",
+        payload,
+        config
+      );
+    } catch (err) {
+      console.log(err);
+    }
+
+    e.preventDefault();
+  };
   return (
     <CommentBoxStyle>
-      <CommentBoxStyleForm id="commentForm">
+      <CommentBoxStyleForm onSubmit={onSubmit} id="commentForm">
         <CommentBoxInput
-          name="commentBox"
+          name="commentText"
           placeholder="Your comment..."
           form="commentForm"
           type="text"
+          value={commentText}
+          onChange={onChange}
         ></CommentBoxInput>
         <CommentBoxSubmit type="submit" value="+"></CommentBoxSubmit>
       </CommentBoxStyleForm>
@@ -88,6 +132,10 @@ const CommentBoxSubmit = styled.input`
 
   &:hover {
     transform: translateY(-3px);
+  }
+
+  &:active {
+    transform: translateY(-1px);
   }
 `;
 
