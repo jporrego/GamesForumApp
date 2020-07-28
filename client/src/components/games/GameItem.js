@@ -5,7 +5,7 @@ import GameContext from "../../context/game/gameContext";
 
 function GameItem({
   game,
-  game: { title, summary, img, platform, date, comment_count },
+  game: { title, summary, img, platform, date, comment_count, follow_count },
 }) {
   const gameContext = useContext(GameContext);
 
@@ -37,7 +37,7 @@ function GameItem({
       <GameDate>{date}</GameDate>
       <GameFollowers>
         <div>Followers</div>
-        <div>0</div>
+        <div>{follow_count}</div>
       </GameFollowers>
       <GameComments>
         <div>Comments</div>

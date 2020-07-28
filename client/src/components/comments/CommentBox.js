@@ -19,8 +19,9 @@ const CommentBox = () => {
   const onChange = (e) => {
     if (!authContext.isAuthenticated) {
       history.push("/login");
+    } else {
+      setComment({ ...comment, [e.target.name]: e.target.value });
     }
-    setComment({ ...comment, [e.target.name]: e.target.value });
   };
 
   const onSubmit = async (e) => {

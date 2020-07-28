@@ -34,7 +34,15 @@ router.get("/", async (req, res) => {
         [game.game_id]
       );
       const comment_count = comments.rows.length;
+
+      const followers = await pool.query(
+        "SELECT * FROM follow WHERE game_id = $1",
+        [game.game_id]
+      );
+      const follow_count = followers.rows.length;
+
       game.comment_count = comment_count;
+      game.follow_count = follow_count;
     }
     res.json(games.rows);
   } catch (error) {

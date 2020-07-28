@@ -4,10 +4,13 @@ import { useLocation } from "react-router-dom";
 import Comments from "../comments/Comments";
 import GameContext from "../../context/game/gameContext";
 import AuthContext from "../../context/auth/authContext";
+import { useHistory } from "react-router-dom";
+import axios from "axios";
 
 function Game() {
   const gameContext = useContext(GameContext);
   const authContext = useContext(AuthContext);
+  const history = useHistory();
 
   const game = gameContext.selectedGame;
 
@@ -15,6 +18,32 @@ function Game() {
     scrollToTop();
     authContext.loadUser();
   }, []);
+
+  const followGame = async () => {
+    if (!authContext.isAuthenticated) {
+      history.push("/login");
+    } else {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      const payload = {
+        user_account_id: authContext.user.user_account_id,
+        game_id: gameContext.selectedGame.game_id,
+      };
+      try {
+        const res = await axios.post(
+          "http://localhost:5000/api/followers",
+          payload,
+          config
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
 
   const scrollToTop = () => {
     window.scrollTo(0, 0);
@@ -30,11 +59,15 @@ function Game() {
           <GameSummary>{game.summary}</GameSummary>
           <GamePlatform>{game.platform}</GamePlatform>
           <GameDate>{game.date}</GameDate>
-          <Followers>Followers</Followers>
+          <FollowersCount>
+            <div>Followers</div>
+            <h3>{game.follow_count}</h3>
+          </FollowersCount>
           <CommentCount>
             <div>Comments</div>
             <h3>{game.comment_count}</h3>
           </CommentCount>
+          <FollowButton onClick={followGame}>Follow</FollowButton>
         </GameInfo>
         <Comments></Comments>
       </GameStyle>
@@ -65,7 +98,7 @@ const GameBackground = styled.div`
 const GameInfo = styled.div`
   display: grid;
   grid-template-columns: 30% 40% repeat(2, 1fr);
-  grid-template-rows: max-content 1fr;
+  grid-template-rows: max-content 1fr max-content;
   background-color: var(--dark-color);
   border-top: 5px solid var(--primary-color);
   color: var(--font-color-white);
@@ -91,7 +124,7 @@ const GameTitle = styled.h1`
 `;
 
 const GameSummary = styled.div`
-  grid-row: 2/3;
+  grid-row: 2/4;
   grid-column: 2/3;
   font-size: 1.5rem;
   font-weight: 300;
@@ -119,14 +152,22 @@ const GameDate = styled.div`
   font-weight: 600;
   text-align: center;
 `;
-const Followers = styled.div`
+const FollowersCount = styled.div`
   grid-row: 2/3;
   grid-column: 3/4;
+  display: grid;
   justify-self: center;
   align-self: start;
+  justify-items: center;
   font-size: 2.3rem;
   font-weight: 600;
   margin-top: 3rem;
+
+  & h3 {
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    font-weight: 700;
+  }
 `;
 const CommentCount = styled.div`
   grid-row: 2/3;
@@ -143,6 +184,27 @@ const CommentCount = styled.div`
     color: var(--primary-color);
     font-size: 2.5rem;
     font-weight: 700;
+  }
+`;
+
+const FollowButton = styled.div`
+  grid-row: 3/4;
+  grid-column: 3/5;
+  justify-self: center;
+  align-self: center;
+  padding: 0.5rem 1.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  text-transform: uppercase;
+  box-shadow: 0px 2px 0px var(--primary-color);
+  user-select: none;
+  cursor: pointer;
+  transition: all 0.15s ease-out;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 0px 20px var(--primary-color);
   }
 `;
 

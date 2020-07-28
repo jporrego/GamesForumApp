@@ -19,9 +19,9 @@ const GameState = (props) => {
   };
 
   // SET_SELECTED_GAME
-  const setSelectedGame = (game_id) => {
-    localStorage.setItem("selectedGameLocalStorage", JSON.stringify(game_id));
-    dispatch({ type: SET_SELECTED_GAME, payload: game_id });
+  const setSelectedGame = (game) => {
+    localStorage.setItem("selectedGameLocalStorage", JSON.stringify(game));
+    dispatch({ type: SET_SELECTED_GAME, payload: game });
   };
 
   // CLEAR_SELECTED_GAME
