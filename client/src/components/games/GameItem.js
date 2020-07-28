@@ -3,7 +3,10 @@ import styled, { css } from "styled-components";
 import { NavLink, Link, useHistory } from "react-router-dom";
 import GameContext from "../../context/game/gameContext";
 
-function GameItem({ game, game: { title, summary, img, platform, date } }) {
+function GameItem({
+  game,
+  game: { title, summary, img, platform, date, comment_count },
+}) {
   const gameContext = useContext(GameContext);
 
   const gameTitleLength = 25;
@@ -34,11 +37,11 @@ function GameItem({ game, game: { title, summary, img, platform, date } }) {
       <GameDate>{date}</GameDate>
       <GameFollowers>
         <div>Followers</div>
-        <div>5</div>
+        <div>0</div>
       </GameFollowers>
       <GameComments>
         <div>Comments</div>
-        <div>5</div>
+        <div>{comment_count}</div>
       </GameComments>
     </GameItemStyle>
   );

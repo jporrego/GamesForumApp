@@ -31,7 +31,10 @@ function Game() {
           <GamePlatform>{game.platform}</GamePlatform>
           <GameDate>{game.date}</GameDate>
           <Followers>Followers</Followers>
-          <CommentCount>Comments</CommentCount>
+          <CommentCount>
+            <div>Comments</div>
+            <h3>{game.comment_count}</h3>
+          </CommentCount>
         </GameInfo>
         <Comments></Comments>
       </GameStyle>
@@ -128,11 +131,19 @@ const Followers = styled.div`
 const CommentCount = styled.div`
   grid-row: 2/3;
   grid-column: 4/5;
+  display: grid;
   justify-self: center;
   align-self: start;
+  justify-items: center;
   font-size: 2.3rem;
   font-weight: 600;
   margin-top: 3rem;
+
+  & h3 {
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    font-weight: 700;
+  }
 `;
 
 export default Game;

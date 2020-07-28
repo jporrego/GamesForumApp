@@ -27,6 +27,15 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const games = await pool.query("SELECT * FROM game");
+
+    for (const game of games.rows) {
+      const comments = await pool.query(
+        "SELECT * FROM comment WHERE game_id = $1",
+        [game.game_id]
+      );
+      const comment_count = comments.rows.length;
+      game.comment_count = comment_count;
+    }
     res.json(games.rows);
   } catch (error) {
     console.error(err.message);

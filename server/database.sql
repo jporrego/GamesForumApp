@@ -29,3 +29,13 @@ CREATE TABLE comment
     CONSTRAINT fk_user_account FOREIGN KEY (user_account_id) REFERENCES user_account(user_account_id),
     CONSTRAINT fk_game FOREIGN KEY (game_id) REFERENCES game(game_id)
 );
+
+CREATE TABLE follow
+(   
+    follow_id SERIAL PRIMARY KEY,
+    user_account_id INT,
+    game_id INT,
+    follow_date DATE DEFAULT CURRENT_DATE,
+    CONSTRAINT fk_user_account FOREIGN KEY (user_account_id) REFERENCES user_account(user_account_id),
+    CONSTRAINT fk_game FOREIGN KEY (game_id) REFERENCES game(game_id)
+);

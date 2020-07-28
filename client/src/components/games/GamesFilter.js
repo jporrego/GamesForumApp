@@ -23,6 +23,7 @@ const GamesFilterStyle = styled.div`
   color: white;
   font-size: 1.4rem;
   text-transform: uppercase;
+  margin-top: 6rem;
   margin-bottom: 2rem;
 `;
 

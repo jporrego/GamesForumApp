@@ -30,13 +30,13 @@ body {
   color: #333;
 }
 
-a {
-  color: var(--primary-color);
+a, :visited {
+  color: var(--font-color-white);
   text-decoration: none;
 }
 
 a:hover {
-  color: #666;
+  color: var(--font-color-grey);
 }
 
 ul {
@@ -58,6 +58,7 @@ img {
 
 /* Navbar */
 
+/*
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -92,6 +93,7 @@ img {
 .navbar .welcome span {
   margin-right: 0.6rem;
 }
+*/
 
 /* Mobile Styles */
 
@@ -113,12 +115,4 @@ img {
     font-size: 1rem;
   }
   /* Navbar */
-  .navbar {
-    display: block;
-    text-align: center;
-  }
-  .navbar ul {
-    text-align: center;
-    justify-content: center;
-  }
 }

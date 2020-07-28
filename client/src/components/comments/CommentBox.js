@@ -17,7 +17,7 @@ const CommentBox = () => {
   const { commentText } = comment;
 
   const onChange = (e) => {
-    if (authContext.isAuthenticated === null) {
+    if (!authContext.isAuthenticated) {
       history.push("/login");
     }
     setComment({ ...comment, [e.target.name]: e.target.value });

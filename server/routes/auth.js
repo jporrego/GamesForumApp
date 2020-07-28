@@ -11,10 +11,9 @@ const pool = require("../config/db");
 // @desc    Get logged in user
 // @access  Private
 router.get("/", auth, async (req, res) => {
-  console.log(1);
   try {
     const user = await pool.query(
-      "SELECT * FROM user_account WHERE user_account_id = $1;",
+      "SELECT email, name, user_account_id FROM user_account WHERE user_account_id = $1;",
       [req.user.id]
     );
     res.json(user.rows[0]);
