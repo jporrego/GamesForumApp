@@ -8,33 +8,36 @@ import Game from "./components/games/Game";
 import axios from "axios";
 import "./App.css";
 
+import AuthState from "./context/auth/AuthState";
 import GameState from "./context/game/GameState";
 
 const App = () => {
   return (
-    <GameState>
-      <Router>
-        <div className="App">
-          <Navbar />
-          <div className="container">
-            <Switch>
-              <Route exact path="/">
-                <Home />
-              </Route>
-              <Route exact path="/login">
-                <Login></Login>
-              </Route>
-              <Route exact path="/register">
-                <Register></Register>
-              </Route>
-              <Route exact path="/:title">
-                <Game></Game>
-              </Route>
-            </Switch>
+    <AuthState>
+      <GameState>
+        <Router>
+          <div className="App">
+            <Navbar />
+            <div className="container">
+              <Switch>
+                <Route exact path="/">
+                  <Home />
+                </Route>
+                <Route exact path="/login">
+                  <Login></Login>
+                </Route>
+                <Route exact path="/register">
+                  <Register></Register>
+                </Route>
+                <Route exact path="/:title">
+                  <Game></Game>
+                </Route>
+              </Switch>
+            </div>
           </div>
-        </div>
-      </Router>
-    </GameState>
+        </Router>
+      </GameState>
+    </AuthState>
   );
 };
 

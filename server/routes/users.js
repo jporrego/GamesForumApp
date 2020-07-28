@@ -12,7 +12,7 @@ const pool = require("../config/db");
 router.post(
   "/",
   [
-    check("name", "Please add a name").not().isEmpty(),
+    check("username", "Please add a name").not().isEmpty(),
     check("email", "Please include a valid email").isEmail(),
     check(
       "password",
@@ -37,6 +37,10 @@ router.post(
       if (email_exists.rows[0]) {
         return res.status(400).json({ msg: "That email is already in use" });
       }
+      // --- Check if passwords match
+      if (req.body.password != req.body.password2) {
+        return res.status(400).json({ msg: "The passwords don't match" });
+      }
       // --- Create new user
       const user = req.body;
 
@@ -47,7 +51,7 @@ router.post(
       // Add new user to database
       const newUser = await pool.query(
         "INSERT INTO user_account (name, email, password) VALUES($1, $2, $3) RETURNING *",
-        [user.name, user.email, user.password]
+        [user.username, user.email, user.password]
       );
 
       // Generate user token

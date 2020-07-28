@@ -1,3 +1,10 @@
 export const GET_GAMES = "GET_GAMES";
 export const SET_SELECTED_GAME = "SET_SELECTED_GAME";
 export const CLEAR_SELECTED_GAME = "CLEAR_SELECTED_GAME";
+export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
+export const REGISTER_FAIL = "REGISTER_FAIL";
+export const USER_LOADED = "USER_LOADED";
+export const AUTH_ERROR = "AUTH_ERROR";
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_FAIL = "LOGIN_FAIL";
+export const LOGOUT = "LOGOUT";

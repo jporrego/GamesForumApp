@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import styled, { css } from "styled-components";
 import Comment from "./Comment";
+import CommentBox from "./CommentBox";
 import GameContext from "../../context/game/gameContext";
 import axios from "axios";
 
@@ -39,6 +40,7 @@ const Comments = () => {
           </form>
         </CommentsFilterSelector>
       </CommentsFilter>
+      <CommentBox></CommentBox>
       <CommentSection>
         {comments.map((comment) => (
           <Comment key={comment.comment_id} comment={comment}></Comment>

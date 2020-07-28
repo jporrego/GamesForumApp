@@ -1,10 +1,34 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import styled, { css } from "styled-components";
+import AuthContext from "../../context/auth/authContext";
 
 const Register = () => {
+  const authContext = useContext(AuthContext);
+
+  const { register } = authContext;
+  const [user, setUser] = useState({
+    username: "",
+    email: "",
+    password: "",
+    password2: "",
+  });
+
+  const { username, email, password, password2 } = user;
+
+  const onChange = (e) => setUser({ ...user, [e.target.name]: e.target.value });
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    register({
+      username,
+      email,
+      password,
+      password2,
+    });
+  };
   return (
     <RegisterStyle>
-      <RegisterForm>
+      <RegisterForm onSubmit={onSubmit}>
         <RegisterFormTitle>Sign Up</RegisterFormTitle>
 
         <RegisterFormItem>
@@ -12,14 +36,8 @@ const Register = () => {
           <RegisterFormItemInput
             name="username"
             type="text"
-          ></RegisterFormItemInput>
-        </RegisterFormItem>
-
-        <RegisterFormItem>
-          <RegisterFormLabel for="password">Password</RegisterFormLabel>
-          <RegisterFormItemInput
-            name="password"
-            type="password"
+            value={user.username}
+            onChange={onChange}
           ></RegisterFormItemInput>
         </RegisterFormItem>
 
@@ -28,8 +46,33 @@ const Register = () => {
           <RegisterFormItemInput
             name="email"
             type="email"
+            value={user.email}
+            onChange={onChange}
           ></RegisterFormItemInput>
         </RegisterFormItem>
+
+        <RegisterFormItem>
+          <RegisterFormLabel for="password">Password</RegisterFormLabel>
+          <RegisterFormItemInput
+            name="password"
+            type="password"
+            value={user.password}
+            onChange={onChange}
+          ></RegisterFormItemInput>
+        </RegisterFormItem>
+
+        <RegisterFormItem>
+          <RegisterFormLabel for="password2">
+            Confirm Password
+          </RegisterFormLabel>
+          <RegisterFormItemInput
+            name="password2"
+            type="password"
+            value={user.password2}
+            onChange={onChange}
+          ></RegisterFormItemInput>
+        </RegisterFormItem>
+        <RegisterFormSubmit type="submit" value="Register"></RegisterFormSubmit>
       </RegisterForm>
     </RegisterStyle>
   );
@@ -68,10 +111,34 @@ const RegisterFormItemInput = styled.input`
   border-style: none;
   font-weight: 500;
   color: var(--font-color-white);
+  outline: none;
 `;
 
 const RegisterFormLabel = styled.label`
   font-size: 1.5rem;
   font-weight: 700;
+`;
+
+const RegisterFormSubmit = styled.input`
+  background-color: var(--primary-color);
+  height: 3.5rem;
+  width: 25%;
+  justify-self: center;
+  border-radius: 0.5rem;
+  padding: 0px 1rem;
+  border-style: none;
+  font-weight: 700;
+  color: var(--font-color-white);
+  transition: all 0.15s ease-out;
+  cursor: pointer;
+  outline: none;
+  text-transform: uppercase;
+
+  &:hover {
+    transform: translateY(-3px);
+  }
+  &:active {
+    transform: translateY(-1px);
+  }
 `;
 export default Register;

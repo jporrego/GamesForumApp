@@ -53,7 +53,6 @@ router.get("/", async (req, res) => {
     if (!comments.rows) {
       return res.status(400).json({ msg: "No comments for that game_id" });
     }*/
-    console.log(comments.rows);
     res.json(comments.rows);
   } catch (err) {
     console.error(err.message);
