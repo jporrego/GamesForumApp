@@ -55,16 +55,11 @@ router.post(
       );
 
       // Generate user token
-      const createdUser = await pool.query(
-        `SELECT user_account_id FROM user_account WHERE email = '${user_email}';`
-      );
-
       const payload = {
         user: {
-          id: createdUser.id,
+          id: newUser.rows[0].user_account_id,
         },
       };
-
       jwt.sign(
         payload,
         config.get("jwtSecret"),

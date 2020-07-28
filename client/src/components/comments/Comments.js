@@ -30,7 +30,7 @@ const Comments = () => {
   return (
     <CommentsStyle>
       <CommentsFilter>
-        <CommentsFilterTitle>Latest</CommentsFilterTitle>
+        <CommentsFilterTitle>Latest Comments</CommentsFilterTitle>
         <CommentsFilterSelector>
           <form id="comments_form">
             <select name="comments-filter">

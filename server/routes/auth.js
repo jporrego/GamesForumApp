@@ -3,65 +3,75 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
+const auth = require("../middleware/auth");
 const { check, validationResult } = require("express-validator");
 const pool = require("../config/db");
 
-// @route POST api/auth
-// @desc Login an user
-// @access Public
-router.post("/", async (req, res) => {
-  const { email, password } = req.body;
+// @route   GET api/auth
+// @desc    Get logged in user
+// @access  Private
+router.get("/", auth, async (req, res) => {
   try {
-    // --- Get user
-    let user = await pool.query(
-      `SELECT * FROM user_account WHERE email = $1;`,
-      [email]
+    const user = await pool.query(
+      "SELECT * FROM user_account WHERE user_account_id = $1;",
+      [req.user.id]
     );
-
-    // Check if email exists
-    if (!user.rows[0]) {
-      return res.status(400).json({ msg: "That email doesn't exist" });
-    }
-    // Bcrypt ingressed password
-    const validPassword = await bcrypt.compare(password, user.rows[0].password);
-
-    if (!validPassword) {
-      return res.status(400).json({ msg: "Password or Email is incorrect" });
-    }
-
-    const payload = {
-      user: {
-        id: user.id,
-      },
-    };
-
-    jwt.sign(
-      payload,
-      config.get("jwtSecret"),
-      {
-        expiresIn: 14400,
-      },
-      (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-      }
-    );
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
-});
-
-// @route     GET api/auth
-// @desc      Get logged in user
-// @access    Private
-/*router.get("/", auth, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id).select("-password");
     res.json(user);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
-});*/
+});
+/*
+// @route   POST api/auth
+// @desc    Authenticate user & get token
+// @access  Public
+router.post(
+  "/",
+  [
+    check("email", "Please include a valid email").isEmail(),
+    check("password", "Password is required").exists(),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const { email, password } = req.body;
+    try {
+      let user = await User.findOne({ email });
+
+      if (!user) {
+        return res.status(400).json({ msg: "Invalid credentials" });
+      }
+
+      const isMatch = await bcrypt.compare(password, user.password);
+
+      if (!isMatch) {
+        return res.status(400).json({ msg: "Invalid password" });
+      }
+
+      const payload = {
+        user: {
+          id: user.id,
+        },
+      };
+
+      jwt.sign(
+        payload,
+        config.get("jwtSecret"),
+        {
+          expiresIn: 360000,
+        },
+        (err, token) => {
+          if (err) throw err;
+          res.json({ token });
+        }
+      );
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  }
+);*/
 module.exports = router;
