@@ -1,10 +1,14 @@
 import React, { useState, useContext } from "react";
 import styled, { css } from "styled-components";
 import axios from "axios";
+import AuthContext from "../../context/auth/authContext";
 import GameContext from "../../context/game/gameContext";
+import { useHistory } from "react-router-dom";
 
 const CommentBox = () => {
+  const authContext = useContext(AuthContext);
   const gameContext = useContext(GameContext);
+  const history = useHistory();
 
   const [comment, setComment] = useState({
     commentText: "",
@@ -12,8 +16,12 @@ const CommentBox = () => {
 
   const { commentText } = comment;
 
-  const onChange = (e) =>
+  const onChange = (e) => {
+    if (authContext.isAuthenticated === null) {
+      history.push("/login");
+    }
     setComment({ ...comment, [e.target.name]: e.target.value });
+  };
 
   const onSubmit = async (e) => {
     const config = {
@@ -28,7 +36,7 @@ const CommentBox = () => {
     }
 
     const payload = {
-      user_account_id: 18,
+      user_account_id: authContext.user.user_account_id,
       game_id: gameContext.selectedGame.game_id,
       comment_text: commentText,
     };
@@ -44,6 +52,11 @@ const CommentBox = () => {
 
     e.preventDefault();
   };
+
+  const submitButton = (
+    <CommentBoxSubmit type="submit" value="+"></CommentBoxSubmit>
+  );
+
   return (
     <CommentBoxStyle>
       <CommentBoxStyleForm onSubmit={onSubmit} id="commentForm">
@@ -55,7 +68,7 @@ const CommentBox = () => {
           value={commentText}
           onChange={onChange}
         ></CommentBoxInput>
-        <CommentBoxSubmit type="submit" value="+"></CommentBoxSubmit>
+        {commentText && submitButton}
       </CommentBoxStyleForm>
     </CommentBoxStyle>
   );

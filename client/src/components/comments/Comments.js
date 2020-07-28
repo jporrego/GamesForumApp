@@ -52,7 +52,9 @@ const Comments = () => {
 
 const CommentsStyle = styled.div`
   display: grid;
-  grid-template-rows: max-content 1fr;
+  grid-template-rows: max-content max-content 1fr;
+  grid-template-columns: 1fr;
+  width: 100%;
   margin-top: 10rem;
 `;
 

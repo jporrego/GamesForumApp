@@ -1,11 +1,20 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled, { css } from "styled-components";
 import AuthContext from "../../context/auth/authContext";
+import { useHistory } from "react-router-dom";
 
 const Login = () => {
   const authContext = useContext(AuthContext);
+  const history = useHistory();
 
-  const { register } = authContext;
+  const { login, isAuthenticated } = authContext;
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      history.push("/");
+    }
+  }, [isAuthenticated]);
+
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -17,7 +26,7 @@ const Login = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    register({
+    login({
       email,
       password,
     });

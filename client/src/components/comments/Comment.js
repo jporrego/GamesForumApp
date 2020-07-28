@@ -2,7 +2,6 @@ import React from "react";
 import styled, { css } from "styled-components";
 
 const Comment = ({ comment }) => {
-  console.log({ comment });
   return (
     <CommentStyle>
       <CommentText>{comment.comment_text}</CommentText>

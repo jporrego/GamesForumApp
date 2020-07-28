@@ -3,13 +3,17 @@ import styled, { css } from "styled-components";
 import { useLocation } from "react-router-dom";
 import Comments from "../comments/Comments";
 import GameContext from "../../context/game/gameContext";
+import AuthContext from "../../context/auth/authContext";
 
 function Game() {
   const gameContext = useContext(GameContext);
+  const authContext = useContext(AuthContext);
+
   const game = gameContext.selectedGame;
 
   useEffect(() => {
     scrollToTop();
+    authContext.loadUser();
   }, []);
 
   const scrollToTop = () => {

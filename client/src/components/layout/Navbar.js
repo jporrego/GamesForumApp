@@ -1,8 +1,21 @@
-import React from "react";
+import React, { useContext } from "react";
 import PropTypes from "prop-types";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useHistory } from "react-router-dom";
+import AuthContext from "../../context/auth/authContext";
 
 const Navbar = ({ icon, title }) => {
+  const authContext = useContext(AuthContext);
+  const history = useHistory();
+
+  const onClick = () => {
+    authContext.logout();
+    setTimeout(
+      history.push({
+        pathname: "/",
+      }),
+      6000
+    );
+  };
   return (
     <nav className="navbar bg-primary">
       <h1>
@@ -14,6 +27,9 @@ const Navbar = ({ icon, title }) => {
         </li>
         <li>
           <Link to="register">Register</Link>
+        </li>
+        <li>
+          <div onClick={onClick}>Logout</div>
         </li>
       </ul>
     </nav>
