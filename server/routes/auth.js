@@ -16,13 +16,13 @@ router.get("/", auth, async (req, res) => {
       "SELECT * FROM user_account WHERE user_account_id = $1;",
       [req.user.id]
     );
-    res.json(user);
+    res.json(user.rows[0]);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
 });
-/*
+
 // @route   POST api/auth
 // @desc    Authenticate user & get token
 // @access  Public
@@ -38,14 +38,18 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
     const { email, password } = req.body;
-    try {
-      let user = await User.findOne({ email });
 
-      if (!user) {
+    try {
+      let user = await pool.query(
+        "SELECT * FROM user_account WHERE email = $1;",
+        [email]
+      );
+
+      if (user.rowCount === 0) {
         return res.status(400).json({ msg: "Invalid credentials" });
       }
 
-      const isMatch = await bcrypt.compare(password, user.password);
+      const isMatch = await bcrypt.compare(password, user.rows[0].password);
 
       if (!isMatch) {
         return res.status(400).json({ msg: "Invalid password" });
@@ -53,7 +57,7 @@ router.post(
 
       const payload = {
         user: {
-          id: user.id,
+          id: user.rows[0].user_account_id,
         },
       };
 
@@ -73,5 +77,5 @@ router.post(
       res.status(500).send("Server Error");
     }
   }
-);*/
+);
 module.exports = router;
