@@ -159,9 +159,10 @@ const FollowersCount = styled.div`
   justify-self: center;
   align-self: start;
   justify-items: center;
-  font-size: 2.3rem;
+  font-size: 1.8rem;
   font-weight: 600;
   margin-top: 3rem;
+  text-transform: uppercase;
 
   & h3 {
     color: var(--primary-color);
@@ -176,13 +177,14 @@ const CommentCount = styled.div`
   justify-self: center;
   align-self: start;
   justify-items: center;
-  font-size: 2.3rem;
+  font-size: 1.8rem;
   font-weight: 600;
+  text-transform: uppercase;
   margin-top: 3rem;
 
   & h3 {
     color: var(--primary-color);
-    font-size: 2.5rem;
+    font-size: 2.3rem;
     font-weight: 700;
   }
 `;
@@ -193,18 +195,26 @@ const FollowButton = styled.div`
   justify-self: center;
   align-self: center;
   padding: 0.5rem 1.5rem;
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 3rem;
   text-transform: uppercase;
-  box-shadow: 0px 2px 0px var(--primary-color);
+  border-radius: 0.6rem;
+  box-shadow: 0px 3px 2px var(--primary-color);
   user-select: none;
   cursor: pointer;
   transition: all 0.15s ease-out;
 
   &:hover {
+    background-color: var(--primary-color);
     transform: translateY(-3px);
     box-shadow: 0px 0px 20px var(--primary-color);
+  }
+
+  &:active {
+    background-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: 0px 1px 10px var(--primary-color);
   }
 `;
 
