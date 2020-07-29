@@ -4,7 +4,8 @@ import styled, { css } from "styled-components";
 
 const Comment = ({ comment }) => {
   const { comment_id } = comment;
-  const [comments, setComments] = useState();
+  const [comments, setComments] = useState([]);
+  const [showReplies, setShowReplies] = useState(true);
 
   useEffect(() => {
     getComments();
@@ -21,20 +22,35 @@ const Comment = ({ comment }) => {
     setComments(res.data);
   };
 
+  const hideReplies = () => {
+    setShowReplies(false);
+  };
+
+  const showRepliesOnClick = () => {
+    setShowReplies(true);
+  };
+  console.log(comments.length);
   return (
     <CommentStyle>
       <CommentSection>
         <CommentText>{comment.comment_text}</CommentText>
         <CommentDate>{comment.comment_date}</CommentDate>
+        {comments.length > 0 && !showReplies && (
+          <ShowRepliesButton onClick={showRepliesOnClick}>
+            Show Replies
+          </ShowRepliesButton>
+        )}
         <CommentUser>{comment.user.name}</CommentUser>
       </CommentSection>
-      {comments && (
+      {comments.length > 0 && showReplies && (
         <Replies>
-          <Fragment>
+          <HideCommentBar onClick={hideReplies}></HideCommentBar>
+          <ReplySpacer></ReplySpacer>
+          <ReplySection>
             {comments.map((comment) => (
               <Comment key={comment.comment_id} comment={comment}></Comment>
             ))}
-          </Fragment>
+          </ReplySection>
         </Replies>
       )}
     </CommentStyle>
@@ -44,14 +60,12 @@ const Comment = ({ comment }) => {
 const CommentStyle = styled.div`
   display: grid;
   grid-template-rows: max-content;
-  gap: 1rem;
   grid-template-columns: 1fr;
   align-items: center;
   color: var(--font-color-white);
   font-size: 1.6rem;
   font-weight: 400;
-
-  cursor: pointer;
+  gap: 1rem;
 `;
 
 const CommentSection = styled.div`
@@ -59,10 +73,12 @@ const CommentSection = styled.div`
   grid-column: 1/-1;
   display: grid;
   grid-template-rows: 1fr max-content;
-  grid-template-columns: 80% 1fr;
+  grid-template-columns: max-content 60% 1fr;
   align-items: center;
   color: var(--font-color-white);
   background-color: var(--dark-color);
+  padding: 0.6rem 0px;
+  margin: 0rem 0px;
   font-size: 1.6rem;
   font-weight: 400;
   border-radius: 0.6rem;
@@ -78,7 +94,7 @@ const CommentSection = styled.div`
 
 const CommentText = styled.div`
   grid-row: 1/2;
-  grid-column: 1/2;
+  grid-column: 1/3;
   margin-left: 4rem;
 `;
 
@@ -91,18 +107,48 @@ const CommentDate = styled.div`
   color: var(--font-color-grey);
 `;
 
+const ShowRepliesButton = styled.div`
+  grid-row: 2/3;
+  grid-column: 2/3;
+  margin-left: 4rem;
+  font-weight: 600;
+  font-size: 1.2rem;
+  justify-self: start;
+  cursor: pointer;
+  color: var(--primary-color);
+`;
+
 const CommentUser = styled.div`
   grid-row: 1/3;
-  grid-column: 2/3;
-  margin-right: 2.5rem;
+  grid-column: 3/4;
   justify-self: end;
+  margin-right: 2rem;
 `;
 
 const Replies = styled.div`
   grid-row: 2/3;
   grid-column: 1/-1;
-  padding-left: 3rem;
-  border-left: 3px solid var(--dark-color);
+  display: grid;
+  grid-template-columns: 4px 3rem 1fr;
+`;
+
+const HideCommentBar = styled.div`
+  background-color: var(--dark-color);
+  grid-column: 1/2;
+  width: 100%;
+  cursor: pointer;
+  transition: 0.1s all ease-out;
+
+  &:hover {
+    background-color: var(--primary-color);
+  }
+`;
+
+const ReplySpacer = styled.div``;
+
+const ReplySection = styled.div`
+  display: grid;
+  gap: 1rem;
 `;
 
 export default Comment;
