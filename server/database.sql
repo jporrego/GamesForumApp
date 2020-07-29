@@ -24,10 +24,12 @@ CREATE TABLE comment
     comment_id SERIAL PRIMARY KEY,
     user_account_id INT,
     game_id INT,
+    replied_comment_id INT,
     comment_text VARCHAR(2500) NOT NULL,
     comment_date DATE DEFAULT CURRENT_DATE,
     CONSTRAINT fk_user_account FOREIGN KEY (user_account_id) REFERENCES user_account(user_account_id),
-    CONSTRAINT fk_game FOREIGN KEY (game_id) REFERENCES game(game_id)
+    CONSTRAINT fk_game FOREIGN KEY (game_id) REFERENCES game(game_id),
+    CONSTRAINT fk_replied_comment_id FOREIGN KEY (replied_comment_id) REFERENCES comment(comment_id)
 );
 
 CREATE TABLE follow
