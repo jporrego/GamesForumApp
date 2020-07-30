@@ -1,11 +1,25 @@
 import React, { useState, useEffect, useContext, Fragment } from "react";
 import axios from "axios";
+import AuthContext from "../../context/auth/authContext";
+import GameContext from "../../context/game/gameContext";
+import { useHistory } from "react-router-dom";
 import styled, { css } from "styled-components";
 
 const Comment = ({ comment }) => {
+  const authContext = useContext(AuthContext);
+  const gameContext = useContext(GameContext);
+  const history = useHistory();
+
   const { comment_id } = comment;
+  const [commentReply, setCommentReply] = useState({
+    commentReplyText: "",
+  });
+
+  const { commentReplyText } = commentReply;
+
   const [comments, setComments] = useState([]);
   const [showReplies, setShowReplies] = useState(true);
+  const [addReply, setAddReply] = useState(false);
 
   useEffect(() => {
     getComments();
@@ -29,19 +43,89 @@ const Comment = ({ comment }) => {
   const showRepliesOnClick = () => {
     setShowReplies(true);
   };
+
+  const onChange = (e) => {
+    if (/*!authContext.isAuthenticated*/ false) {
+      history.push("/login");
+    } else {
+      setCommentReply({ ...comment, [e.target.name]: e.target.value });
+    }
+  };
+
+  const onSubmit = async (e) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    if (commentReplyText === "") {
+      e.preventDefault();
+      return;
+    }
+
+    const payload = {
+      user_account_id: authContext.user.user_account_id,
+      replied_comment_id: comment_id,
+      comment_text: commentReplyText,
+    };
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/comments",
+        payload,
+        config
+      );
+    } catch (err) {
+      console.log(err);
+    }
+
+    e.preventDefault();
+  };
+
+  const submitButton = (
+    <CommentBoxSubmit type="submit" value="+"></CommentBoxSubmit>
+  );
+
+  const addReplyOnClick = () => {
+    setAddReply(true);
+  };
   console.log(comments.length);
   return (
     <CommentStyle>
+      {/* Comment Section */}
       <CommentSection>
+        <Likes>
+          <i className="fa fa-sort-asc"></i>
+          <div>0</div>
+          <i className="fa fa-sort-desc"></i>
+        </Likes>
         <CommentText>{comment.comment_text}</CommentText>
         <CommentDate>{comment.comment_date}</CommentDate>
+        <MakeReply onClick={addReplyOnClick}>Reply</MakeReply>
         {comments.length > 0 && !showReplies && (
           <ShowRepliesButton onClick={showRepliesOnClick}>
-            Show Replies
+            Replies
           </ShowRepliesButton>
         )}
         <CommentUser>{comment.user.name}</CommentUser>
       </CommentSection>
+      {/* Reply Section */}
+      {addReply && (
+        <CommentBoxStyle>
+          <CommentBoxStyleForm onSubmit={onSubmit} id="commentForm">
+            <CommentBoxInput
+              name="commentReplyText"
+              placeholder="Your reply..."
+              form="commentForm"
+              type="text"
+              value={commentReplyText}
+              onChange={onChange}
+            ></CommentBoxInput>
+            {commentReplyText && submitButton}
+          </CommentBoxStyleForm>
+        </CommentBoxStyle>
+      )}
+      {/* Replies Section */}
       {comments.length > 0 && showReplies && (
         <Replies>
           <HideCommentBar onClick={hideReplies}></HideCommentBar>
@@ -69,48 +153,78 @@ const CommentStyle = styled.div`
 `;
 
 const CommentSection = styled.div`
-  grid-row: 1/2;
-  grid-column: 1/-1;
   display: grid;
   grid-template-rows: 1fr max-content;
-  grid-template-columns: max-content 60% 1fr;
-  align-items: center;
+  grid-template-columns: 5rem repeat(2, 5rem) 60% 1fr;
   color: var(--font-color-white);
   background-color: var(--dark-color);
-  padding: 0.6rem 0px;
+  padding: 1rem 0px;
   margin: 0rem 0px;
   font-size: 1.6rem;
   font-weight: 400;
   border-radius: 0.6rem;
-  border-bottom: 0px solid var(--primary-color);
+  border-right: 0px solid var(--primary-color);
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.4);
-  transition: all 0.15s ease-out;
+  transition: all 0.12s ease-out;
 
   &:hover {
-    border-bottom: 3px solid var(--primary-color);
-    transform: translateY(-3px);
+    border-right: 5px solid var(--primary-color);
+  }
+`;
+
+const Likes = styled.div`
+  grid-row: 1/-1;
+  grid-column: 1/2;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  justify-self: center;
+  align-self: center;
+
+  & i {
+    font-size: 1.8rem;
+  }
+  & i:hover {
+    cursor: pointer;
+
+    color: var(--primary-color);
   }
 `;
 
 const CommentText = styled.div`
   grid-row: 1/2;
-  grid-column: 1/3;
-  margin-left: 4rem;
+  grid-column: 2/5;
+  justify-self: start;
+  align-self: start;
+  max-width: 100%;
 `;
 
 const CommentDate = styled.div`
   grid-row: 2/3;
-  grid-column: 1/2;
-  margin-left: 4rem;
+  grid-column: 4/5;
+  margin-left: 1rem;
   font-weight: 600;
   font-size: 1.2rem;
   color: var(--font-color-grey);
 `;
 
-const ShowRepliesButton = styled.div`
+const MakeReply = styled.div`
   grid-row: 2/3;
   grid-column: 2/3;
-  margin-left: 4rem;
+  font-weight: 600;
+  font-size: 1.2rem;
+  justify-self: start;
+  cursor: pointer;
+  color: var(--font-color-grey);
+
+  &:hover {
+    color: var(--red-color);
+  }
+`;
+
+const ShowRepliesButton = styled.div`
+  grid-row: 2/3;
+  grid-column: 3/4;
   font-weight: 600;
   font-size: 1.2rem;
   justify-self: start;
@@ -120,13 +234,13 @@ const ShowRepliesButton = styled.div`
 
 const CommentUser = styled.div`
   grid-row: 1/3;
-  grid-column: 3/4;
+  grid-column: 5/6;
   justify-self: end;
   margin-right: 2rem;
 `;
 
 const Replies = styled.div`
-  grid-row: 2/3;
+  grid-row: 3/4;
   grid-column: 1/-1;
   display: grid;
   grid-template-columns: 4px 3rem 1fr;
@@ -149,6 +263,81 @@ const ReplySpacer = styled.div``;
 const ReplySection = styled.div`
   display: grid;
   gap: 1rem;
+`;
+
+const CommentBoxStyle = styled.div`
+  display: grid;
+  min-height: 10rem;
+  color: var(--font-color-white);
+  background-color: var(--bg-color);
+  font-size: 1.6rem;
+  font-weight: 400;
+  padding: 1rem 1.5rem;
+  border-style: none;
+  border-radius: 0.6rem;
+  border-top: 3px solid var(--primary-color);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.4);
+
+  cursor: text;
+  transition: all 0.15s ease-out;
+`;
+
+const CommentBoxStyleForm = styled.form`
+  display: grid;
+  grid-template-columns: 1fr max-content;
+`;
+
+const CommentBoxInput = styled.textarea`
+  width: 100%;
+  height: 100%;
+  border-style: none;
+  color: var(--font-color-white);
+  background-color: var(--bg-color);
+  font-size: 1.6rem;
+  font-weight: 400;
+  word-wrap: normal;
+  resize: none;
+  outline: none;
+  overflow: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: var(--font-color-white);
+    opacity: 1; /* Firefox */
+  }
+`;
+
+const CommentBoxSubmit = styled.input`
+  border-style: none;
+  width: max-content;
+  height: max-content;
+  color: var(--font-color-white);
+  background-color: var(--primary-color);
+  align-self: end;
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 0.7rem 1.2rem;
+  word-wrap: normal;
+  border-radius: 200px;
+  resize: none;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.15s ease-out;
+
+  &:hover {
+    transform: translateY(-3px);
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
 `;
 
 export default Comment;
