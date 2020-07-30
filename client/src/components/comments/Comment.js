@@ -16,6 +16,7 @@ const Comment = ({ comment }) => {
   });
 
   const [likes, setLikes] = useState(0);
+  const [userLike, setUserLike] = useState("");
 
   const { commentReplyText } = commentReply;
 
@@ -25,11 +26,12 @@ const Comment = ({ comment }) => {
 
   useEffect(() => {
     getComments();
+    getLikes();
   }, []);
 
   useEffect(() => {
-    getLikes();
-  }, []);
+    getUserLike();
+  }, [authContext.user.user_account_id]);
 
   const getComments = async () => {
     const payload = comment_id;
@@ -61,19 +63,36 @@ const Comment = ({ comment }) => {
       } else {
         negative += 1;
       }
-    } /*
-    if (negative == undefined && positive != undefined) {
-      setLikes(positive);
-    } else if (positive == undefined && negative != undefined) {
-      setLikes(negative);
-    } else if (positive != undefined && negative != undefined) {
-      setLikes(positive - negative);
-    } else {
-      setLikes(0);
     }
-  */
+
     setLikes(positive - negative);
-    console.log(positive - negative);
+  };
+
+  const getUserLike = async () => {
+    const id_value = comment_id;
+
+    try {
+      const currentUserLike = await axios.get(
+        "http://localhost:5000/api/votes/",
+        {
+          params: {
+            checkIfUserVoted: true,
+            comment_id: id_value,
+            user_account_id: authContext.user.user_account_id,
+          },
+        }
+      );
+
+      if (currentUserLike.data.length > 0) {
+        if (currentUserLike.data[0].positive_vote) {
+          setUserLike("Like");
+        } else {
+          setUserLike("Dislike");
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const hideReplies = () => {
@@ -167,7 +186,6 @@ const Comment = ({ comment }) => {
             payload,
             config
           );
-          console.log("Remove like");
         } else if (!previousVote.data[0].positive_vote && value === "dislike") {
           payload.remove_vote = true;
 
@@ -176,7 +194,6 @@ const Comment = ({ comment }) => {
             payload,
             config
           );
-          console.log("Remove dislike");
         } else if (previousVote.data[0].positive_vote && value === "dislike") {
           payload.remove_vote = true;
 
@@ -194,8 +211,6 @@ const Comment = ({ comment }) => {
             payload,
             config
           );
-
-          console.log("Add dislike");
         } else {
           payload.remove_vote = true;
 
@@ -213,7 +228,6 @@ const Comment = ({ comment }) => {
             payload,
             config
           );
-          console.log("Add like");
         }
       } else {
         if (value === "like") {
