@@ -15,6 +15,8 @@ const Comment = ({ comment }) => {
     commentReplyText: "",
   });
 
+  const [likes, setLikes] = useState(0);
+
   const { commentReplyText } = commentReply;
 
   const [comments, setComments] = useState([]);
@@ -23,6 +25,10 @@ const Comment = ({ comment }) => {
 
   useEffect(() => {
     getComments();
+  }, []);
+
+  useEffect(() => {
+    getLikes();
   }, []);
 
   const getComments = async () => {
@@ -34,6 +40,40 @@ const Comment = ({ comment }) => {
       },
     });
     setComments(res.data);
+  };
+
+  const getLikes = async () => {
+    const payload = comment_id;
+
+    const res = await axios.get("http://localhost:5000/api/votes", {
+      params: {
+        comment_id: payload,
+        checkIfUserVoted: false,
+      },
+    });
+
+    let positive = 0;
+    let negative = 0;
+
+    for (const vote of res.data) {
+      if (vote.positive_vote) {
+        positive += 1;
+      } else {
+        negative += 1;
+      }
+    } /*
+    if (negative == undefined && positive != undefined) {
+      setLikes(positive);
+    } else if (positive == undefined && negative != undefined) {
+      setLikes(negative);
+    } else if (positive != undefined && negative != undefined) {
+      setLikes(positive - negative);
+    } else {
+      setLikes(0);
+    }
+  */
+    setLikes(positive - negative);
+    console.log(positive - negative);
   };
 
   const hideReplies = () => {
@@ -198,7 +238,7 @@ const Comment = ({ comment }) => {
       console.log(err);
     }
 
-    console.log(previousVote.data);
+    getLikes();
   };
 
   return (
@@ -207,7 +247,7 @@ const Comment = ({ comment }) => {
       <CommentSection>
         <Likes>
           <i className="fa fa-sort-asc" onClick={voteComment} id="like"></i>
-          <div>0</div>
+          <div>{likes}</div>
           <i className="fa fa-sort-desc" onClick={voteComment} id="dislike"></i>
         </Likes>
         <CommentText>{comment.comment_text}</CommentText>
