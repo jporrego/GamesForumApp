@@ -19,6 +19,8 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api/comments", require("./routes/comments"));
 // Follow games and get followers
 app.use("/api/followers", require("./routes/followers"));
+// Vote comments
+app.use("/api/votes", require("./routes/votes"));
 
 app.listen(5000, (req, res) => {
   console.log("Server started.");

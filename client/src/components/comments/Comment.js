@@ -89,15 +89,126 @@ const Comment = ({ comment }) => {
   const addReplyOnClick = () => {
     setAddReply(true);
   };
-  console.log(comments.length);
+
+  const voteComment = async (e) => {
+    const value = e.target.id;
+    const id_value = comment_id;
+
+    let previousVote;
+
+    try {
+      previousVote = await axios.get("http://localhost:5000/api/votes/", {
+        params: {
+          checkIfUserVoted: true,
+          comment_id: id_value,
+          user_account_id: authContext.user.user_account_id,
+        },
+      });
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      const payload = {
+        user_account_id: authContext.user.user_account_id,
+        comment_id: id_value,
+      };
+
+      let res;
+
+      if (previousVote.data.length > 0) {
+        if (previousVote.data[0].positive_vote && value === "like") {
+          payload.remove_vote = true;
+
+          res = await axios.post(
+            "http://localhost:5000/api/votes",
+            payload,
+            config
+          );
+          console.log("Remove like");
+        } else if (!previousVote.data[0].positive_vote && value === "dislike") {
+          payload.remove_vote = true;
+
+          res = await axios.post(
+            "http://localhost:5000/api/votes",
+            payload,
+            config
+          );
+          console.log("Remove dislike");
+        } else if (previousVote.data[0].positive_vote && value === "dislike") {
+          payload.remove_vote = true;
+
+          res = await axios.post(
+            "http://localhost:5000/api/votes",
+            payload,
+            config
+          );
+
+          payload.remove_vote = false;
+          payload.positive_vote = false;
+
+          res = await axios.post(
+            "http://localhost:5000/api/votes",
+            payload,
+            config
+          );
+
+          console.log("Add dislike");
+        } else {
+          payload.remove_vote = true;
+
+          res = await axios.post(
+            "http://localhost:5000/api/votes",
+            payload,
+            config
+          );
+
+          payload.remove_vote = false;
+          payload.positive_vote = true;
+
+          res = await axios.post(
+            "http://localhost:5000/api/votes",
+            payload,
+            config
+          );
+          console.log("Add like");
+        }
+      } else {
+        if (value === "like") {
+          payload.positive_vote = true;
+
+          res = await axios.post(
+            "http://localhost:5000/api/votes",
+            payload,
+            config
+          );
+        } else {
+          payload.positive_vote = false;
+
+          res = await axios.post(
+            "http://localhost:5000/api/votes",
+            payload,
+            config
+          );
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+    console.log(previousVote.data);
+  };
+
   return (
     <CommentStyle>
       {/* Comment Section */}
       <CommentSection>
         <Likes>
-          <i className="fa fa-sort-asc"></i>
+          <i className="fa fa-sort-asc" onClick={voteComment} id="like"></i>
           <div>0</div>
-          <i className="fa fa-sort-desc"></i>
+          <i className="fa fa-sort-desc" onClick={voteComment} id="dislike"></i>
         </Likes>
         <CommentText>{comment.comment_text}</CommentText>
         <CommentDate>{comment.comment_date}</CommentDate>
