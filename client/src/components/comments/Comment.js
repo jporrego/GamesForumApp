@@ -31,7 +31,7 @@ const Comment = ({ comment }) => {
 
   useEffect(() => {
     getUserLike();
-  }, [authContext.user.user_account_id]);
+  }, []);
 
   const getComments = async () => {
     const payload = comment_id;
@@ -89,6 +89,8 @@ const Comment = ({ comment }) => {
         } else {
           setUserLike("Dislike");
         }
+      } else {
+        setUserLike("");
       }
     } catch (err) {
       console.log(err);
@@ -253,16 +255,53 @@ const Comment = ({ comment }) => {
     }
 
     getLikes();
+    getUserLike();
   };
+
+  const likeArrowWhite = (
+    <i
+      className="fa fa-sort-asc"
+      onClick={voteComment}
+      id="like"
+      style={{ color: "var(--font-color-white)" }}
+    ></i>
+  );
+
+  const likeArrowBlue = (
+    <i
+      className="fa fa-sort-asc"
+      onClick={voteComment}
+      id="like"
+      style={{ color: "var(--primary-color)" }}
+    ></i>
+  );
+
+  const dislikeArrowWhite = (
+    <i
+      className="fa fa-sort-desc"
+      onClick={voteComment}
+      id="dislike"
+      style={{ color: "var(--font-color-white)" }}
+    ></i>
+  );
+
+  const dislikeArrowBlue = (
+    <i
+      className="fa fa-sort-desc"
+      onClick={voteComment}
+      id="dislike"
+      style={{ color: "var(--red-color)" }}
+    ></i>
+  );
 
   return (
     <CommentStyle>
       {/* Comment Section */}
       <CommentSection>
         <Likes>
-          <i className="fa fa-sort-asc" onClick={voteComment} id="like"></i>
+          {userLike === "Like" ? likeArrowBlue : likeArrowWhite}
           <div>{likes}</div>
-          <i className="fa fa-sort-desc" onClick={voteComment} id="dislike"></i>
+          {userLike === "Dislike" ? dislikeArrowBlue : dislikeArrowWhite}
         </Likes>
         <CommentText>{comment.comment_text}</CommentText>
         <CommentDate>{comment.comment_date}</CommentDate>
