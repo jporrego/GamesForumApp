@@ -14,15 +14,15 @@ const Comment = ({ comment }) => {
   const [commentReply, setCommentReply] = useState({
     commentReplyText: "",
   });
+  const { commentReplyText } = commentReply;
 
   const [likes, setLikes] = useState(0);
   const [userLike, setUserLike] = useState("");
 
-  const { commentReplyText } = commentReply;
-
   const [comments, setComments] = useState([]);
   const [showReplies, setShowReplies] = useState(true);
   const [addReply, setAddReply] = useState(false);
+  const [numOfReplies, setNumOfReplies] = useState(0);
 
   useEffect(() => {
     getComments();
@@ -41,6 +41,7 @@ const Comment = ({ comment }) => {
         comment_id: payload,
       },
     });
+    setNumOfReplies(res.data.length);
     setComments(res.data);
   };
 
@@ -306,11 +307,16 @@ const Comment = ({ comment }) => {
         <CommentText>{comment.comment_text}</CommentText>
         <CommentDate>{comment.comment_date}</CommentDate>
         <MakeReply onClick={addReplyOnClick}>Reply</MakeReply>
-        {comments.length > 0 && !showReplies && (
-          <ShowRepliesButton onClick={showRepliesOnClick}>
-            Replies
-          </ShowRepliesButton>
+        {numOfReplies > 0 ? (
+          <RepliesButtonActive onClick={showRepliesOnClick} numOfReplies>
+            {numOfReplies} {numOfReplies === 1 ? "Reply" : "Replies"}
+          </RepliesButtonActive>
+        ) : (
+          <RepliesButtonGrey onClick={showRepliesOnClick} numOfReplies>
+            {numOfReplies} {numOfReplies === 1 ? "Reply" : "Replies"}
+          </RepliesButtonGrey>
         )}
+
         <CommentUser>{comment.user.name}</CommentUser>
       </CommentSection>
       {/* Reply Section */}
@@ -359,7 +365,7 @@ const CommentStyle = styled.div`
 const CommentSection = styled.div`
   display: grid;
   grid-template-rows: 1fr max-content;
-  grid-template-columns: 5rem repeat(2, 5rem) 60% 1fr;
+  grid-template-columns: 5rem 4rem 6rem 60% 1fr;
   color: var(--font-color-white);
   background-color: var(--dark-color);
   padding: 1rem 0px;
@@ -426,7 +432,17 @@ const MakeReply = styled.div`
   }
 `;
 
-const ShowRepliesButton = styled.div`
+const RepliesButtonGrey = styled.div`
+  grid-row: 2/3;
+  grid-column: 3/4;
+  font-weight: 600;
+  font-size: 1.2rem;
+  justify-self: start;
+  cursor: pointer;
+  color: var(--font-color-grey);
+`;
+
+const RepliesButtonActive = styled.div`
   grid-row: 2/3;
   grid-column: 3/4;
   font-weight: 600;
