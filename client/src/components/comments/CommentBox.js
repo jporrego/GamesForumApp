@@ -5,7 +5,7 @@ import AuthContext from "../../context/auth/authContext";
 import GameContext from "../../context/game/gameContext";
 import { useHistory } from "react-router-dom";
 
-const CommentBox = () => {
+const CommentBox = ({ reloadComments }) => {
   const authContext = useContext(AuthContext);
   const gameContext = useContext(GameContext);
   const history = useHistory();
@@ -24,7 +24,7 @@ const CommentBox = () => {
     }
   };
 
-  const onSubmit = async (e) => {
+  const sendComment = async (e) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -32,7 +32,6 @@ const CommentBox = () => {
     };
 
     if (commentText === "") {
-      e.preventDefault();
       return;
     }
 
@@ -47,20 +46,24 @@ const CommentBox = () => {
         payload,
         config
       );
+      setComment({ commentText: "" });
+      reloadComments();
     } catch (err) {
       console.log(err);
     }
-
-    e.preventDefault();
   };
 
   const submitButton = (
-    <CommentBoxSubmit type="submit" value="+"></CommentBoxSubmit>
+    <CommentBoxSubmit
+      type="button"
+      value="+"
+      onClick={sendComment}
+    ></CommentBoxSubmit>
   );
 
   return (
     <CommentBoxStyle>
-      <CommentBoxStyleForm onSubmit={onSubmit} id="commentForm">
+      <CommentBoxStyleForm id="commentForm">
         <CommentBoxInput
           name="commentText"
           placeholder="Your comment..."

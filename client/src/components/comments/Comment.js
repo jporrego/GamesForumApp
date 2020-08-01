@@ -137,15 +137,20 @@ const Comment = ({ comment }) => {
         payload,
         config
       );
+      setCommentReply({ commentReplyText: "" });
+      getComments();
+      setAddReply(false);
     } catch (err) {
       console.log(err);
     }
-
-    e.preventDefault();
   };
 
   const submitButton = (
-    <CommentBoxSubmit type="submit" value="+"></CommentBoxSubmit>
+    <CommentBoxSubmit
+      type="button"
+      value="+"
+      onClick={onSubmit}
+    ></CommentBoxSubmit>
   );
 
   const addReplyOnClick = () => {
@@ -322,7 +327,7 @@ const Comment = ({ comment }) => {
       {/* Reply Section */}
       {addReply && (
         <CommentBoxStyle>
-          <CommentBoxStyleForm onSubmit={onSubmit} id="commentForm">
+          <CommentBoxStyleForm id="commentForm">
             <CommentBoxInput
               name="commentReplyText"
               placeholder="Your reply..."
@@ -378,7 +383,7 @@ const CommentSection = styled.div`
   transition: all 0.12s ease-out;
 
   &:hover {
-    border-right: 5px solid var(--primary-color);
+    /*border-right: 5px solid var(--primary-color);*/
   }
 `;
 
@@ -396,7 +401,6 @@ const Likes = styled.div`
   }
   & i:hover {
     cursor: pointer;
-
     color: var(--primary-color);
   }
 `;
@@ -437,7 +441,7 @@ const RepliesButtonGrey = styled.div`
   grid-column: 3/4;
   font-weight: 600;
   font-size: 1.2rem;
-  justify-self: start;
+  justify-self: center;
   cursor: pointer;
   color: var(--font-color-grey);
 `;
@@ -447,7 +451,7 @@ const RepliesButtonActive = styled.div`
   grid-column: 3/4;
   font-weight: 600;
   font-size: 1.2rem;
-  justify-self: start;
+  justify-self: center;
   cursor: pointer;
   color: var(--primary-color);
 `;

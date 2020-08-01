@@ -24,6 +24,10 @@ const Comments = () => {
     setComments(res.data);
   };
 
+  const reloadComments = () => {
+    getComments();
+  };
+
   if (!comments) {
     return <div>Spinner</div>;
   }
@@ -40,7 +44,7 @@ const Comments = () => {
           </form>
         </CommentsFilterSelector>
       </CommentsFilter>
-      <CommentBox></CommentBox>
+      <CommentBox reloadComments={reloadComments}></CommentBox>
       <CommentSection>
         {comments.map((comment) => (
           <Comment key={comment.comment_id} comment={comment}></Comment>
