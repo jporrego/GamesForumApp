@@ -4,8 +4,10 @@ import styled, { css } from "styled-components";
 function GamesFilter() {
   return (
     <GamesFilterStyle>
+      <div></div>
       <div>Game Title</div>
       <div>Release Date</div>
+      <div>Platform</div>
       <div>Followers</div>
       <div>Comments</div>
     </GamesFilterStyle>
@@ -14,7 +16,7 @@ function GamesFilter() {
 
 const GamesFilterStyle = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 10% 20% repeat(4, 1fr);
   grid-template-rows: 3rem;
   justify-items: center;
   align-items: center;

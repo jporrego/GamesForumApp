@@ -32,47 +32,33 @@ function GameItem({
         <GameImg src={img} alt="Thumbnail" />
       </GameImgContainer>
       <GameTitle>{gameTitleText}</GameTitle>
-      <GameSummary>{summary.substring(0, 80).trim() + "..."}</GameSummary>
-      <GamePlatform>{platform}</GamePlatform>
       <GameDate>{date}</GameDate>
+      {/*<GameSummary>{summary.substring(0, 80).trim() + "..."}</GameSummary>*/}
+      <GamePlatform>{platform}</GamePlatform>
       <GameFollowers>
-        <div>Followers</div>
         <div>{follow_count}</div>
       </GameFollowers>
       <GameComments>
-        <div>Comments</div>
         <div>{comment_count}</div>
       </GameComments>
     </GameItemStyle>
   );
 }
-const GameTitle = styled.div`
-  grid-column: 2/3;
-  font-size: 1.4rem;
-  font-weight: 600;
-  padding: 0px 0px 0px 2rem;
-  justify-self: start;
-  align-self: center;
-  transition: all 0.15s ease-out;
-`;
 
 const GameItemStyle = styled.div`
   display: grid;
-  grid-template-columns: 10% 20% 20% repeat(4, 1fr);
+  grid-template-columns: 10% 20% repeat(4, 1fr);
   grid-template-rows: 1fr;
-  background-color: var(--bg-color-light);
+  background-color: var(--dark-color);
   color: var(--font-color-white);
   border-radius: 0.6rem;
-  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.13),
-    -4px -4px 6px rgba(255, 255, 255, 0.04);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.4);
   overflow: hidden;
   cursor: pointer;
   transition: all 0.15s ease-out;
 
   &:hover {
     background-color: var(--primary-color);
-  }
-  &:hover ${GameTitle} {
   }
 `;
 
@@ -93,12 +79,30 @@ const GameImg = styled.img`
   transition: all 0.15s ease-out;
 `;
 
+const GameTitle = styled.div`
+  grid-column: 2/3;
+  font-size: 1.4rem;
+  font-weight: 600;
+  padding: 0px 0px 0px 2rem;
+  justify-self: start;
+  align-self: center;
+  transition: all 0.15s ease-out;
+`;
+
 const GameSummary = styled.div`
   grid-column: 3/4;
   align-self: center;
   justify-self: center;
   font-size: 1.2rem;
   font-weight: 300;
+`;
+
+const GameDate = styled.div`
+  grid-column: 3/4;
+  font-size: 1.5rem;
+  font-weight: 500;
+  align-self: center;
+  justify-self: center;
 `;
 
 const GamePlatform = styled.div`
@@ -111,17 +115,9 @@ const GamePlatform = styled.div`
   padding: 0.5rem;
 `;
 
-const GameDate = styled.div`
-  grid-column: 5/6;
-  font-size: 1.3rem;
-  font-weight: 500;
-  align-self: center;
-  justify-self: center;
-`;
-
 const GameFollowers = styled.div`
-  grid-column: 6/7;
-  font-size: 1.3rem;
+  grid-column: 5/6;
+  font-size: 1.5rem;
   font-weight: 500;
   align-self: center;
   justify-self: center;
@@ -129,8 +125,8 @@ const GameFollowers = styled.div`
 `;
 
 const GameComments = styled.div`
-  grid-column: 7/8;
-  font-size: 1.3rem;
+  grid-column: 6/7;
+  font-size: 1.5rem;
   font-weight: 500;
   align-self: center;
   justify-self: center;
