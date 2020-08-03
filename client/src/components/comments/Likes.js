@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext, Fragment } from "react";
 import AuthContext from "../../context/auth/authContext";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 import styled, { css } from "styled-components";
 
 const Likes = ({ comment }) => {
   const authContext = useContext(AuthContext);
+  const history = useHistory();
 
   useEffect(() => {
     getLikes();
@@ -17,110 +19,120 @@ const Likes = ({ comment }) => {
   const [userLike, setUserLike] = useState("");
 
   const voteComment = async (e) => {
-    const value = e.target.id;
-    const id_value = comment_id;
+    if (!authContext.isAuthenticated) {
+      history.push("/login");
+    } else {
+      const value = e.target.id;
+      const id_value = comment_id;
 
-    let previousVote;
+      let previousVote;
 
-    try {
-      previousVote = await axios.get("http://localhost:5000/api/votes/", {
-        params: {
-          checkIfUserVoted: true,
-          comment_id: id_value,
+      try {
+        previousVote = await axios.get("http://localhost:5000/api/votes/", {
+          params: {
+            checkIfUserVoted: true,
+            comment_id: id_value,
+            user_account_id: authContext.user.user_account_id,
+          },
+        });
+
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+
+        const payload = {
           user_account_id: authContext.user.user_account_id,
-        },
-      });
+          comment_id: id_value,
+        };
 
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
+        let res;
 
-      const payload = {
-        user_account_id: authContext.user.user_account_id,
-        comment_id: id_value,
-      };
+        if (previousVote.data.length > 0) {
+          if (previousVote.data[0].positive_vote && value === "like") {
+            payload.remove_vote = true;
 
-      let res;
+            res = await axios.post(
+              "http://localhost:5000/api/votes",
+              payload,
+              config
+            );
+          } else if (
+            !previousVote.data[0].positive_vote &&
+            value === "dislike"
+          ) {
+            payload.remove_vote = true;
 
-      if (previousVote.data.length > 0) {
-        if (previousVote.data[0].positive_vote && value === "like") {
-          payload.remove_vote = true;
+            res = await axios.post(
+              "http://localhost:5000/api/votes",
+              payload,
+              config
+            );
+          } else if (
+            previousVote.data[0].positive_vote &&
+            value === "dislike"
+          ) {
+            payload.remove_vote = true;
 
-          res = await axios.post(
-            "http://localhost:5000/api/votes",
-            payload,
-            config
-          );
-        } else if (!previousVote.data[0].positive_vote && value === "dislike") {
-          payload.remove_vote = true;
+            res = await axios.post(
+              "http://localhost:5000/api/votes",
+              payload,
+              config
+            );
 
-          res = await axios.post(
-            "http://localhost:5000/api/votes",
-            payload,
-            config
-          );
-        } else if (previousVote.data[0].positive_vote && value === "dislike") {
-          payload.remove_vote = true;
+            payload.remove_vote = false;
+            payload.positive_vote = false;
 
-          res = await axios.post(
-            "http://localhost:5000/api/votes",
-            payload,
-            config
-          );
+            res = await axios.post(
+              "http://localhost:5000/api/votes",
+              payload,
+              config
+            );
+          } else {
+            payload.remove_vote = true;
 
-          payload.remove_vote = false;
-          payload.positive_vote = false;
+            res = await axios.post(
+              "http://localhost:5000/api/votes",
+              payload,
+              config
+            );
 
-          res = await axios.post(
-            "http://localhost:5000/api/votes",
-            payload,
-            config
-          );
+            payload.remove_vote = false;
+            payload.positive_vote = true;
+
+            res = await axios.post(
+              "http://localhost:5000/api/votes",
+              payload,
+              config
+            );
+          }
         } else {
-          payload.remove_vote = true;
+          if (value === "like") {
+            payload.positive_vote = true;
 
-          res = await axios.post(
-            "http://localhost:5000/api/votes",
-            payload,
-            config
-          );
+            res = await axios.post(
+              "http://localhost:5000/api/votes",
+              payload,
+              config
+            );
+          } else {
+            payload.positive_vote = false;
 
-          payload.remove_vote = false;
-          payload.positive_vote = true;
-
-          res = await axios.post(
-            "http://localhost:5000/api/votes",
-            payload,
-            config
-          );
+            res = await axios.post(
+              "http://localhost:5000/api/votes",
+              payload,
+              config
+            );
+          }
         }
-      } else {
-        if (value === "like") {
-          payload.positive_vote = true;
-
-          res = await axios.post(
-            "http://localhost:5000/api/votes",
-            payload,
-            config
-          );
-        } else {
-          payload.positive_vote = false;
-
-          res = await axios.post(
-            "http://localhost:5000/api/votes",
-            payload,
-            config
-          );
-        }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
-    }
 
-    getLikes();
-    getUserLike();
+      getLikes();
+      getUserLike();
+    }
   };
 
   const getLikes = async () => {

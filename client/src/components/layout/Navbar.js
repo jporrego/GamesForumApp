@@ -24,7 +24,9 @@ const Navbar = ({ icon, title }) => {
         <Link to="/profile">Profile</Link>
       </li>
       <li>
-        <Link onClick={onClick}>Logout</Link>
+        <Link onClick={onClick} to="">
+          Logout
+        </Link>
       </li>
     </Fragment>
   );
