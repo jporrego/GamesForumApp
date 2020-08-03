@@ -1,17 +1,10 @@
-import React, { useState, useEffect, useContext, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
 import styled, { css } from "styled-components";
-import AuthContext from "../../context/auth/authContext";
-import GameContext from "../../context/game/gameContext";
 import Reply from "./Reply";
 import Likes from "./Likes";
 
 const Comment = ({ comment }) => {
-  const authContext = useContext(AuthContext);
-  const gameContext = useContext(GameContext);
-  const history = useHistory();
-
   const { comment_id } = comment;
 
   const [comments, setComments] = useState([]);
@@ -47,6 +40,10 @@ const Comment = ({ comment }) => {
     setAddReply(true);
   };
 
+  const hideReplyOnClick = () => {
+    setAddReply(false);
+  };
+
   return (
     <CommentStyle>
       {/* Comment Section */}
@@ -68,7 +65,13 @@ const Comment = ({ comment }) => {
         <CommentUser>{comment.user.name}</CommentUser>
       </CommentSection>
       {/* Reply Section */}
-      {addReply && <Reply comment={comment}></Reply>}
+      {addReply && (
+        <Reply
+          comment={comment}
+          getComments={getComments}
+          hideReplyOnClick={hideReplyOnClick}
+        ></Reply>
+      )}
       {/* Replies Section */}
       {comments.length > 0 && showReplies && (
         <Replies>

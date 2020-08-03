@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useContext, Fragment } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import AuthContext from "../../context/auth/authContext";
-import GameContext from "../../context/game/gameContext";
 import { useHistory } from "react-router-dom";
 import styled, { css } from "styled-components";
 
-const Reply = ({ comment }) => {
+const Reply = ({ comment, getComments, hideReplyOnClick }) => {
   const authContext = useContext(AuthContext);
-  const gameContext = useContext(GameContext);
   const history = useHistory();
 
   const { comment_id } = comment;
@@ -45,8 +43,8 @@ const Reply = ({ comment }) => {
         config
       );
       setReplyText("");
-      //getComments();
-      //setAddReply(false);
+      getComments();
+      hideReplyOnClick();
     } catch (err) {
       console.log(err);
     }
