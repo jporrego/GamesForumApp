@@ -5,6 +5,7 @@ import styled, { css } from "styled-components";
 import AuthContext from "../../context/auth/authContext";
 import GameContext from "../../context/game/gameContext";
 import Reply from "./Reply";
+import Likes from "./Likes";
 
 const Comment = ({ comment }) => {
   const authContext = useContext(AuthContext);
@@ -12,13 +13,6 @@ const Comment = ({ comment }) => {
   const history = useHistory();
 
   const { comment_id } = comment;
-  const [commentReply, setCommentReply] = useState({
-    commentReplyText: "",
-  });
-  const { commentReplyText } = commentReply;
-
-  const [likes, setLikes] = useState(0);
-  const [userLike, setUserLike] = useState("");
 
   const [comments, setComments] = useState([]);
   const [showReplies, setShowReplies] = useState(true);
@@ -27,11 +21,6 @@ const Comment = ({ comment }) => {
 
   useEffect(() => {
     getComments();
-    getLikes();
-  }, []);
-
-  useEffect(() => {
-    getUserLike();
   }, []);
 
   const getComments = async () => {
@@ -46,59 +35,6 @@ const Comment = ({ comment }) => {
     setComments(res.data);
   };
 
-  const getLikes = async () => {
-    const payload = comment_id;
-
-    const res = await axios.get("http://localhost:5000/api/votes", {
-      params: {
-        comment_id: payload,
-        checkIfUserVoted: false,
-      },
-    });
-
-    let positive = 0;
-    let negative = 0;
-
-    for (const vote of res.data) {
-      if (vote.positive_vote) {
-        positive += 1;
-      } else {
-        negative += 1;
-      }
-    }
-
-    setLikes(positive - negative);
-  };
-
-  const getUserLike = async () => {
-    const id_value = comment_id;
-
-    try {
-      const currentUserLike = await axios.get(
-        "http://localhost:5000/api/votes/",
-        {
-          params: {
-            checkIfUserVoted: true,
-            comment_id: id_value,
-            user_account_id: authContext.user.user_account_id,
-          },
-        }
-      );
-
-      if (currentUserLike.data.length > 0) {
-        if (currentUserLike.data[0].positive_vote) {
-          setUserLike("Like");
-        } else {
-          setUserLike("Dislike");
-        }
-      } else {
-        setUserLike("");
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const hideReplies = () => {
     setShowReplies(false);
   };
@@ -111,158 +47,11 @@ const Comment = ({ comment }) => {
     setAddReply(true);
   };
 
-  const voteComment = async (e) => {
-    const value = e.target.id;
-    const id_value = comment_id;
-
-    let previousVote;
-
-    try {
-      previousVote = await axios.get("http://localhost:5000/api/votes/", {
-        params: {
-          checkIfUserVoted: true,
-          comment_id: id_value,
-          user_account_id: authContext.user.user_account_id,
-        },
-      });
-
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-
-      const payload = {
-        user_account_id: authContext.user.user_account_id,
-        comment_id: id_value,
-      };
-
-      let res;
-
-      if (previousVote.data.length > 0) {
-        if (previousVote.data[0].positive_vote && value === "like") {
-          payload.remove_vote = true;
-
-          res = await axios.post(
-            "http://localhost:5000/api/votes",
-            payload,
-            config
-          );
-        } else if (!previousVote.data[0].positive_vote && value === "dislike") {
-          payload.remove_vote = true;
-
-          res = await axios.post(
-            "http://localhost:5000/api/votes",
-            payload,
-            config
-          );
-        } else if (previousVote.data[0].positive_vote && value === "dislike") {
-          payload.remove_vote = true;
-
-          res = await axios.post(
-            "http://localhost:5000/api/votes",
-            payload,
-            config
-          );
-
-          payload.remove_vote = false;
-          payload.positive_vote = false;
-
-          res = await axios.post(
-            "http://localhost:5000/api/votes",
-            payload,
-            config
-          );
-        } else {
-          payload.remove_vote = true;
-
-          res = await axios.post(
-            "http://localhost:5000/api/votes",
-            payload,
-            config
-          );
-
-          payload.remove_vote = false;
-          payload.positive_vote = true;
-
-          res = await axios.post(
-            "http://localhost:5000/api/votes",
-            payload,
-            config
-          );
-        }
-      } else {
-        if (value === "like") {
-          payload.positive_vote = true;
-
-          res = await axios.post(
-            "http://localhost:5000/api/votes",
-            payload,
-            config
-          );
-        } else {
-          payload.positive_vote = false;
-
-          res = await axios.post(
-            "http://localhost:5000/api/votes",
-            payload,
-            config
-          );
-        }
-      }
-    } catch (err) {
-      console.log(err);
-    }
-
-    getLikes();
-    getUserLike();
-  };
-
-  const likeArrowWhite = (
-    <i
-      className="fa fa-sort-asc"
-      onClick={voteComment}
-      id="like"
-      style={{ color: "var(--font-color-white)" }}
-    ></i>
-  );
-
-  const likeArrowBlue = (
-    <i
-      className="fa fa-sort-asc"
-      onClick={voteComment}
-      id="like"
-      style={{ color: "var(--primary-color)" }}
-    ></i>
-  );
-
-  const dislikeArrowWhite = (
-    <i
-      className="fa fa-sort-desc"
-      onClick={voteComment}
-      id="dislike"
-      style={{ color: "var(--font-color-white)" }}
-    ></i>
-  );
-
-  const dislikeArrowBlue = (
-    <i
-      className="fa fa-sort-desc"
-      onClick={voteComment}
-      id="dislike"
-      style={{ color: "var(--red-color)" }}
-    ></i>
-  );
-
   return (
     <CommentStyle>
       {/* Comment Section */}
       <CommentSection>
-        <Likes>
-          {userLike === "Like" ? likeArrowBlue : likeArrowWhite}
-          <div>{likes}</div>
-          {userLike === "Dislike" ? dislikeArrowBlue : dislikeArrowWhite}
-        </Likes>
+        <Likes comment={comment}></Likes>
         <CommentText>{comment.comment_text}</CommentText>
         <CommentDate>{comment.comment_date}</CommentDate>
         <MakeReply onClick={addReplyOnClick}>Reply</MakeReply>
@@ -324,24 +113,6 @@ const CommentSection = styled.div`
 
   &:hover {
     /*border-right: 5px solid var(--primary-color);*/
-  }
-`;
-
-const Likes = styled.div`
-  grid-row: 1/-1;
-  grid-column: 1/2;
-  display: grid;
-  justify-items: center;
-  align-items: center;
-  justify-self: center;
-  align-self: center;
-
-  & i {
-    font-size: 1.8rem;
-  }
-  & i:hover {
-    cursor: pointer;
-    color: var(--primary-color);
   }
 `;
 
