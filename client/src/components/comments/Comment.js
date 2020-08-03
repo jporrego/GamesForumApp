@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext, Fragment } from "react";
 import axios from "axios";
-import AuthContext from "../../context/auth/authContext";
-import GameContext from "../../context/game/gameContext";
 import { useHistory } from "react-router-dom";
 import styled, { css } from "styled-components";
+import AuthContext from "../../context/auth/authContext";
+import GameContext from "../../context/game/gameContext";
+import Reply from "./Reply";
 
 const Comment = ({ comment }) => {
   const authContext = useContext(AuthContext);
@@ -105,53 +106,6 @@ const Comment = ({ comment }) => {
   const showRepliesOnClick = () => {
     setShowReplies(true);
   };
-
-  const onChange = (e) => {
-    if (/*!authContext.isAuthenticated*/ false) {
-      history.push("/login");
-    } else {
-      setCommentReply({ ...comment, [e.target.name]: e.target.value });
-    }
-  };
-
-  const onSubmit = async (e) => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    if (commentReplyText === "") {
-      e.preventDefault();
-      return;
-    }
-
-    const payload = {
-      user_account_id: authContext.user.user_account_id,
-      replied_comment_id: comment_id,
-      comment_text: commentReplyText,
-    };
-    try {
-      const res = await axios.post(
-        "http://localhost:5000/api/comments",
-        payload,
-        config
-      );
-      setCommentReply({ commentReplyText: "" });
-      getComments();
-      setAddReply(false);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const submitButton = (
-    <CommentBoxSubmit
-      type="button"
-      value="+"
-      onClick={onSubmit}
-    ></CommentBoxSubmit>
-  );
 
   const addReplyOnClick = () => {
     setAddReply(true);
@@ -325,21 +279,7 @@ const Comment = ({ comment }) => {
         <CommentUser>{comment.user.name}</CommentUser>
       </CommentSection>
       {/* Reply Section */}
-      {addReply && (
-        <CommentBoxStyle>
-          <CommentBoxStyleForm id="commentForm">
-            <CommentBoxInput
-              name="commentReplyText"
-              placeholder="Your reply..."
-              form="commentForm"
-              type="text"
-              value={commentReplyText}
-              onChange={onChange}
-            ></CommentBoxInput>
-            {commentReplyText && submitButton}
-          </CommentBoxStyleForm>
-        </CommentBoxStyle>
-      )}
+      {addReply && <Reply comment={comment}></Reply>}
       {/* Replies Section */}
       {comments.length > 0 && showReplies && (
         <Replies>
@@ -487,81 +427,6 @@ const ReplySpacer = styled.div``;
 const ReplySection = styled.div`
   display: grid;
   gap: 1rem;
-`;
-
-const CommentBoxStyle = styled.div`
-  display: grid;
-  min-height: 10rem;
-  color: var(--font-color-white);
-  background-color: var(--bg-color);
-  font-size: 1.6rem;
-  font-weight: 400;
-  padding: 1rem 1.5rem;
-  border-style: none;
-  border-radius: 0.6rem;
-  border-top: 3px solid var(--primary-color);
-  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.4);
-
-  cursor: text;
-  transition: all 0.15s ease-out;
-`;
-
-const CommentBoxStyleForm = styled.form`
-  display: grid;
-  grid-template-columns: 1fr max-content;
-`;
-
-const CommentBoxInput = styled.textarea`
-  width: 100%;
-  height: 100%;
-  border-style: none;
-  color: var(--font-color-white);
-  background-color: var(--bg-color);
-  font-size: 1.6rem;
-  font-weight: 400;
-  word-wrap: normal;
-  resize: none;
-  outline: none;
-  overflow: auto;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  &::placeholder {
-    /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: var(--font-color-white);
-    opacity: 1; /* Firefox */
-  }
-`;
-
-const CommentBoxSubmit = styled.input`
-  border-style: none;
-  width: max-content;
-  height: max-content;
-  color: var(--font-color-white);
-  background-color: var(--primary-color);
-  align-self: end;
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  font-weight: 700;
-  padding: 0.7rem 1.2rem;
-  word-wrap: normal;
-  border-radius: 200px;
-  resize: none;
-  outline: none;
-  cursor: pointer;
-  transition: all 0.15s ease-out;
-
-  &:hover {
-    transform: translateY(-3px);
-  }
-
-  &:active {
-    transform: translateY(-1px);
-  }
 `;
 
 export default Comment;
