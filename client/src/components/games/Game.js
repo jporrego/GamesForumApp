@@ -17,7 +17,13 @@ function Game() {
   useEffect(() => {
     scrollToTop();
     authContext.loadUser();
-  }, []);
+  }, [authContext.isAuthenticated]);
+
+  useEffect(() => {
+    checkIfFollows();
+  }, [authContext.isAuthenticated]);
+
+  const [isFollowed, setIsFollowed] = useState(false);
 
   const followGame = async () => {
     if (!authContext.isAuthenticated) {
@@ -39,11 +45,40 @@ function Game() {
           payload,
           config
         );
+        checkIfFollows();
       } catch (err) {
         console.log(err);
       }
     }
   };
+
+  const checkIfFollows = async () => {
+    if (authContext.isAuthenticated) {
+      try {
+        const currentUserFollow = await axios.get(
+          "http://localhost:5000/api/followers/",
+          {
+            params: {
+              user_account_id: authContext.user.user_account_id,
+              game_id: gameContext.selectedGame.game_id,
+            },
+          }
+        );
+        if (currentUserFollow.data.length > 0) {
+          setIsFollowed(true);
+        } else {
+          setIsFollowed(false);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  const followButton = <FollowButton onClick={followGame}>Follow</FollowButton>;
+  const unfollowButton = (
+    <UnfollowButton onClick={followGame}>Unfollow</UnfollowButton>
+  );
 
   const scrollToTop = () => {
     window.scrollTo(0, 0);
@@ -67,7 +102,7 @@ function Game() {
             <div>Comments</div>
             <h3>{game.comment_count}</h3>
           </CommentCount>
-          <FollowButton onClick={followGame}>Follow</FollowButton>
+          {!isFollowed ? followButton : unfollowButton}
         </GameInfo>
         <Comments></Comments>
       </GameStyle>
@@ -201,6 +236,35 @@ const FollowButton = styled.div`
   text-transform: uppercase;
   border-radius: 0.6rem;
   box-shadow: 0px 3px 2px var(--primary-color);
+  user-select: none;
+  cursor: pointer;
+  transition: all 0.15s ease-out;
+
+  &:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-3px);
+    box-shadow: 0px 0px 20px var(--primary-color);
+  }
+
+  &:active {
+    background-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: 0px 1px 10px var(--primary-color);
+  }
+`;
+
+const UnfollowButton = styled.div`
+  grid-row: 3/4;
+  grid-column: 3/5;
+  justify-self: center;
+  align-self: center;
+  padding: 0.5rem 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  text-transform: uppercase;
+  border-radius: 0.6rem;
+  box-shadow: 0px 3px 2px var(--red-color);
   user-select: none;
   cursor: pointer;
   transition: all 0.15s ease-out;
