@@ -229,13 +229,13 @@ const FollowButton = styled.div`
   grid-column: 3/5;
   justify-self: center;
   align-self: center;
-  padding: 0.5rem 1.5rem;
+  padding: 0.3rem 1rem;
   font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 3rem;
   text-transform: uppercase;
   border-radius: 0.6rem;
-  box-shadow: 0px 3px 2px var(--primary-color);
+  background-color: var(--primary-color);
   user-select: none;
   cursor: pointer;
   transition: all 0.15s ease-out;
@@ -258,27 +258,27 @@ const UnfollowButton = styled.div`
   grid-column: 3/5;
   justify-self: center;
   align-self: center;
-  padding: 0.5rem 1.5rem;
+  padding: 0.3rem 1rem;
   font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 3rem;
   text-transform: uppercase;
   border-radius: 0.6rem;
-  box-shadow: 0px 3px 2px var(--red-color);
+  background-color: var(--red-color);
   user-select: none;
   cursor: pointer;
   transition: all 0.15s ease-out;
 
   &:hover {
-    background-color: var(--primary-color);
+    background-color: var(--red-color);
     transform: translateY(-3px);
-    box-shadow: 0px 0px 20px var(--primary-color);
+    box-shadow: 0px 0px 20px var(--red-color);
   }
 
   &:active {
-    background-color: var(--primary-color);
+    background-color: var(--red-color);
     transform: translateY(-1px);
-    box-shadow: 0px 1px 10px var(--primary-color);
+    box-shadow: 0px 1px 10px var(--red-color);
   }
 `;
 
