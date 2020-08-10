@@ -62,7 +62,17 @@ const Comment = ({ comment }) => {
           </RepliesButtonGrey>
         )}
 
-        <CommentUser>{comment.user.name}</CommentUser>
+        <CommentUser>
+          {comment.user.name}
+          <img
+            src={
+              comment.user.profile_pic
+                ? require(`../../img/${comment.user.profile_pic}`)
+                : require("../../img/default_profile_pic.png")
+            }
+            alt="profilepic"
+          />
+        </CommentUser>
       </CommentSection>
       {/* Reply Section */}
       {addReply && (
@@ -173,8 +183,20 @@ const RepliesButtonActive = styled.div`
 const CommentUser = styled.div`
   grid-row: 1/3;
   grid-column: 5/6;
+  display: flex;
+  align-items: center;
   justify-self: end;
   margin-right: 2rem;
+  font-size: 1.3rem;
+
+  & img {
+    height: 4.5rem;
+    width: 4.5rem;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 2rem;
+  }
 `;
 
 const Replies = styled.div`

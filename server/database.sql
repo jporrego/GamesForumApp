@@ -16,7 +16,8 @@ CREATE TABLE user_account
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    reg_date DATE DEFAULT CURRENT_DATE
+    reg_date DATE DEFAULT CURRENT_DATE,
+    profile_pic VARCHAR(255)
 );
 
 CREATE TABLE comment

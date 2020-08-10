@@ -9,6 +9,7 @@ const Profile = () => {
 
   const [user, setUser] = useState({
     username: "",
+    profile_pic: "",
   });
 
   useEffect(() => {
@@ -18,7 +19,10 @@ const Profile = () => {
       history.push("/login");
     }
     if (authContext.user != null) {
-      setUser({ username: authContext.user.name });
+      setUser({
+        username: authContext.user.name,
+        profile_pic: authContext.user.profile_pic,
+      });
     }
   }, [authContext.user]);
 
@@ -32,8 +36,12 @@ const Profile = () => {
         <form action="">
           <ImgLabel htmlFor="img">
             <ProfileImg
-              src={require("../../img/iconmonstr-user-19-240.png")}
-              alt="123"
+              src={
+                user.profile_pic
+                  ? require(`../../img/${user.profile_pic}`)
+                  : require("../../img/default_profile_pic.png")
+              }
+              alt="profilepic"
             />
           </ImgLabel>
           <ImgInput type="file" name="img" id="img" accept="image/*" />
@@ -71,8 +79,10 @@ const User = styled.div`
 
 const ProfileImg = styled.img`
   height: 14rem;
-  width: auto;
+  width: 14rem;
   margin-bottom: 1rem;
+  border-radius: 50%;
+  object-fit: cover;
 `;
 
 const ImgInput = styled.input`
