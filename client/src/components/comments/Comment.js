@@ -186,6 +186,7 @@ const CommentUser = styled.div`
   display: flex;
   align-items: center;
   justify-self: end;
+  align-self: start;
   margin-right: 2rem;
   font-size: 1.3rem;
 
@@ -195,7 +196,7 @@ const CommentUser = styled.div`
     margin-bottom: 1rem;
     border-radius: 50%;
     object-fit: cover;
-    margin-left: 2rem;
+    margin-left: 1rem;
   }
 `;
 

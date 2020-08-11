@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/auth/authContext";
 import styled, { css } from "styled-components";
+import axios from "axios";
 import { useHistory } from "react-router-dom";
 
 const Profile = () => {
@@ -26,6 +27,13 @@ const Profile = () => {
     }
   }, [authContext.user]);
 
+  const onChange = (e) => {
+    const uploadedImg = e.target.files[0];
+
+    const res = axios.put();
+    console.log(uploadedImg);
+  };
+
   const scrollToTop = () => {
     window.scrollTo(0, 0);
   };
@@ -44,7 +52,13 @@ const Profile = () => {
               alt="profilepic"
             />
           </ImgLabel>
-          <ImgInput type="file" name="img" id="img" accept="image/*" />
+          <ImgInput
+            type="file"
+            name="img"
+            id="img"
+            accept=".png, .jpg, .jpeg"
+            onChange={onChange}
+          />
         </form>
         {user.username}
       </User>
