@@ -5,6 +5,9 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 const { check, validationResult } = require("express-validator");
 const pool = require("../config/db");
+let multer = require("multer");
+const upload = multer({ dest: "uploads/" });
+const fs = require("fs");
 
 // @route POST api/users
 // @desc Register a new user
@@ -79,5 +82,13 @@ router.post(
     }
   }
 );
+
+// @route PUT api/users
+// @desc Update user info
+// @access Private
+router.put("/", upload.single("img"), async (req, res) => {
+  console.log(req.file.buffer);
+  res.json(req.file);
+});
 
 module.exports = router;

@@ -42,7 +42,14 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     let comments;
-    if (req.query.comment_id === undefined) {
+    if (req.query.user_id != undefined) {
+      comments = await pool.query(
+        "SELECT * FROM comment WHERE user_account_id = $1;",
+        [req.query.user_id]
+      );
+
+      res.json(comments.rowCount);
+    } else if (req.query.comment_id === undefined) {
       comments = await pool.query(
         "SELECT * FROM comment WHERE game_id = $1 ORDER BY comment_date DESC;",
         [req.query.game_id]

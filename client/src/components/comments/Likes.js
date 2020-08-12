@@ -13,6 +13,10 @@ const Likes = ({ comment }) => {
     getUserLike();
   }, []);
 
+  useEffect(() => {
+    console.log(2);
+  }, [authContext.user]);
+
   const { comment_id } = comment;
 
   const [likes, setLikes] = useState(0);

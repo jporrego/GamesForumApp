@@ -11,6 +11,8 @@ const Profile = () => {
   const [user, setUser] = useState({
     username: "",
     profile_pic: "",
+    comments: 0,
+    follows: 0,
   });
 
   useEffect(() => {
@@ -20,18 +22,71 @@ const Profile = () => {
       history.push("/login");
     }
     if (authContext.user != null) {
+      console.log(1);
       setUser({
+        ...user,
         username: authContext.user.name,
         profile_pic: authContext.user.profile_pic,
       });
+      getUserStats();
     }
   }, [authContext.user]);
 
-  const onChange = (e) => {
-    const uploadedImg = e.target.files[0];
+  const getUserStats = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/comments", {
+        params: {
+          user_id: authContext.user.user_account_id,
+        },
+      });
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-    const res = axios.put();
-    console.log(uploadedImg);
+  const onChange = async (e) => {
+    const uploadedImg = e.target.files[0];
+    const formData = new FormData();
+
+    formData.append("img", uploadedImg);
+
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    const res = await axios.put(
+      "http://localhost:5000/api/users/",
+      formData,
+      config
+    );
+
+    console.log(res.data);
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    console.log(e.target.value);
+    /*const uploadedImg = e.target.files[0];
+    const formData = new FormData();
+
+    formData.append("img", uploadedImg);
+
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    const res = await axios.put(
+      "http://localhost:5000/api/users/",
+      formData,
+      config
+    );
+
+    console.log(res.data);*/
   };
 
   const scrollToTop = () => {
@@ -41,7 +96,7 @@ const Profile = () => {
   return (
     <ProfileStyle>
       <User>
-        <form action="">
+        <form enctype="multipart/form-data" onSubmit={onSubmit}>
           <ImgLabel htmlFor="img">
             <ProfileImg
               src={
@@ -57,13 +112,18 @@ const Profile = () => {
             name="img"
             id="img"
             accept=".png, .jpg, .jpeg"
-            onChange={onChange}
+            /*onChange={onChange}*/
           />
+          <input type="submit" value="1" />
         </form>
         {user.username}
       </User>
-      <Comments>Comments</Comments>
-      <Follows>Follows</Follows>
+      <Comments>
+        <div>Comments</div> {user.comments}
+      </Comments>
+      <Follows>
+        <div>Follows</div> {user.follows}
+      </Follows>
     </ProfileStyle>
   );
 };
@@ -111,7 +171,13 @@ const ImgInput = styled.input`
 const ImgLabel = styled.label`
   cursor: pointer;
 `;
-const Comments = styled.div``;
-const Follows = styled.div``;
+const Comments = styled.div`
+  display: grid;
+  grid-template-rows: max-content max-content;
+`;
+const Follows = styled.div`
+  display: grid;
+  grid-template-rows: max-content max-content;
+`;
 
 export default Profile;
