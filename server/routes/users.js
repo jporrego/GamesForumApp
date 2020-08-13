@@ -87,6 +87,7 @@ router.post(
 // @desc Update user info
 // @access Private
 router.put("/", upload.single("img"), async (req, res) => {
+  fs.writeFile("test.png", base);
   console.log(req.file.buffer);
   res.json(req.file);
 });

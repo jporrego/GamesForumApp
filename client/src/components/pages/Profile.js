@@ -22,24 +22,36 @@ const Profile = () => {
       history.push("/login");
     }
     if (authContext.user != null) {
-      console.log(1);
+      getUserStats();
+    }
+  }, [authContext.isAuthenticated]);
+
+  const getUserStats = async () => {
+    try {
+      const commentCount = await axios.get(
+        "http://localhost:5000/api/comments",
+        {
+          params: {
+            user_id: authContext.user.user_account_id,
+          },
+        }
+      );
+      const followCount = await axios.get(
+        "http://localhost:5000/api/followers",
+        {
+          params: {
+            user_account_id: authContext.user.user_account_id,
+          },
+        }
+      );
       setUser({
         ...user,
         username: authContext.user.name,
         profile_pic: authContext.user.profile_pic,
+        comments: commentCount.data,
+        follows: followCount.data,
       });
-      getUserStats();
-    }
-  }, [authContext.user]);
-
-  const getUserStats = async () => {
-    try {
-      const res = await axios.get("http://localhost:5000/api/comments", {
-        params: {
-          user_id: authContext.user.user_account_id,
-        },
-      });
-      console.log(res.data);
+      console.log();
     } catch (err) {
       console.log(err);
     }

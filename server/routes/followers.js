@@ -40,16 +40,24 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const { user_account_id, game_id } = req.query;
-    // Check if user already follows game
-    const userFollowsGame = await pool.query(
-      "SELECT * FROM follow WHERE user_account_id = $1 and game_id = $2",
-      [user_account_id, game_id]
-    );
+    if (game_id === undefined) {
+      const userFollows = await pool.query(
+        "SELECT * FROM follow WHERE user_account_id = $1",
+        [user_account_id]
+      );
+      res.json(userFollows.rowCount);
+    } else {
+      // Check if user already follows game
+      const userFollowsGame = await pool.query(
+        "SELECT * FROM follow WHERE user_account_id = $1 and game_id = $2",
+        [user_account_id, game_id]
+      );
 
-    if (!userFollowsGame.rows[0]) {
-      return res.json({ msg: "Unfollow" });
+      if (!userFollowsGame.rows[0]) {
+        return res.json({ msg: "Unfollow" });
+      }
+      res.json(userFollowsGame.rows);
     }
-    res.json(userFollowsGame.rows);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");

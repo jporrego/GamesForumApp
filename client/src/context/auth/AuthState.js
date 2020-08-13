@@ -85,7 +85,6 @@ const AuthState = (props) => {
         type: LOGIN_SUCCESS,
         payload: res.data,
       });
-
       loadUser();
     } catch (err) {
       dispatch({
