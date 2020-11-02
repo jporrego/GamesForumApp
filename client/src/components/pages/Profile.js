@@ -51,7 +51,6 @@ const Profile = () => {
         comments: commentCount.data,
         follows: followCount.data,
       });
-      console.log();
     } catch (err) {
       console.log(err);
     }
@@ -62,20 +61,23 @@ const Profile = () => {
     const formData = new FormData();
 
     formData.append("img", uploadedImg);
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
 
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    };
+      const res = await axios.put(
+        "http://localhost:5000/api/users/",
+        formData,
+        config
+      );
 
-    const res = await axios.put(
-      "http://localhost:5000/api/users/",
-      formData,
-      config
-    );
-
-    console.log(res.data);
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const onSubmit = async (e) => {
